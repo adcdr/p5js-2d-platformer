@@ -1,9 +1,9 @@
 class Scenery {
-    draw() {
+    drawGround(y) {
         push();
 
-        fill(0, 200, 50);
-        rect(0, 450, width, height);
+        fill(80, 200, 50);
+        rect(0, y, width, height);
 
         pop();
     }

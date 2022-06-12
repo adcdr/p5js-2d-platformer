@@ -27,14 +27,6 @@ class Sprite {
         return frames;
     }
 
-    setXPosition(x) {
-        this.x = x;
-    }
-
-    setYPosition(y) {
-        this.y = y;
-    }
-
     draw() {
         push();
 
@@ -45,7 +37,7 @@ class Sprite {
 
         if (this.direction === 'left') {
             const mirroredX = -1 * this.x - this.width
-            scale(-1, 1);
+            scale(-1, 1); // Flip image horizontally.
             image(this.frames[this.currentFrame], mirroredX, this.y);
 
             if (this.showBoundingBox) {
@@ -69,5 +61,37 @@ class Sprite {
 
     setDirection(direction) {
         this.direction = direction;
+    }
+
+    getXPosition() {
+        return this.x;
+    }
+
+    getYPosition() {
+        return this.y;
+    }
+
+    setXPosition(x) {
+        this.x = x;
+    }
+
+    setYPosition(y) {
+        this.y = y;
+    }
+
+    getWidth() {
+        return this.width;
+    }
+
+    getHeight() {
+        return this.height;
+    }
+
+    setWidth(width) {
+        this.width = width;
+    }
+
+    setHeight(height) {
+        this.height = height;
     }
 }

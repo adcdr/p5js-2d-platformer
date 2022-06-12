@@ -1,10 +1,6 @@
 let dudeSpriteSheet, dudeSprite;
 let platforms = [];
-const floorYPosition = 450;
-const dudeWidth = 35;
-const dudeHeight = 35;
-let dudeXPosition = 400;
-let dudeYPosition = floorYPosition - dudeHeight + 3;
+const groundYPosition = 450;
 let dudeIsMoving = false;
 let dudeIsJumping = false;
 let dudeIsFalling = false;
@@ -17,7 +13,7 @@ let scenery;
 function preload() 
 {
     // Load the sprite sheet image fo the "dude" character.
-    dudeSpriteSheet = loadImage('assets/sprites/tiny-hero/Dude_Monster/Dude_Monster_Run_6.png');
+    dudeSpriteSheet = loadImage('assets/sprites/tiny-hero/Dude_Monster/Dude_Monster_Walk_6.png');
 }
 
 /**
@@ -32,8 +28,8 @@ function setup()
     // Create a sprite object, with 6 frames.
     dudeSprite = new Sprite(dudeSpriteSheet, 6);
 
-    dudeSprite.setXPosition(dudeXPosition);
-    dudeSprite.setYPosition(dudeYPosition);
+    dudeSprite.setXPosition(400);
+    dudeSprite.setYPosition(groundYPosition - dudeSprite.getHeight());
 
     // Optionally draw the bounding box.
     dudeSprite.setShowBoundingBox(true);
@@ -59,7 +55,7 @@ function draw()
     // Set the background color to 0 (black)
     background(0);
 
-    scenery.draw();
+    scenery.drawGround(groundYPosition);
 
     // For every platform in the platforms variable,
     // draw it to the screen.
@@ -79,38 +75,30 @@ function draw()
     }
 
     if (keyIsDown(LEFT_ARROW)) {
-        // Update position after a key press
-        dudeXPosition = dudeXPosition - 1;
-
-        // Set the dude sprites x position on the screen.
-        dudeSprite.setXPosition(dudeXPosition);
+        // Update dude x position after a key press.
+        dudeSprite.setXPosition(dudeSprite.getXPosition() - 1);
     }
     else if (keyIsDown(RIGHT_ARROW)) 
     {
-        // Update position after a key press
-        dudeXPosition = dudeXPosition + 1;
-
-        // Set the dude sprites x position on the screen.
-        dudeSprite.setXPosition(dudeXPosition);
+        // Update dude x position after a key press.
+        dudeSprite.setXPosition(dudeSprite.getXPosition() + 1);
     }
 
     if (dudeIsJumping) 
     {
-        dudeYPosition = dudeYPosition + 1;
+        dudeSprite.setYPosition(dudeSprite.getYPosition() + 1);
 
-        dudeSprite.setYPosition(dudeYPosition);
-
-        if (dudeYPosition + dudeHeight == floorYPosition) {
+        if (dudeSprite.getYPosition() + dudeSprite.getHeight() == groundYPosition) {
             dudeIsJumping = false;
         }
     }
 
     for (let i = 0; i < platforms.length; i++) 
     {
-        if (platforms[i].isPlayerCollisionTop(dudeXPosition, dudeYPosition, dudeWidth, dudeHeight)) {
+        if (platforms[i].isPlayerCollisionTop(dudeSprite.getXPosition(), dudeSprite.getYPosition(), dudeSprite.getWidth(), dudeSprite.getHeight())) {
             dudeIsJumping = false;
             break;
-        } else if (dudeYPosition + dudeHeight < floorYPosition) {
+        } else if (dudeSprite.getYPosition() + dudeSprite.getHeight() < groundYPosition) {
             dudeIsJumping = true;
         }
     }
@@ -132,18 +120,19 @@ function keyPressed()
         // Make the dude sprite face to the left.
         dudeSprite.setDirection('left');
     }
+    
     // If the right arrow key is pressed.
-    else if (keyCode === RIGHT_ARROW)
+    if (keyCode === RIGHT_ARROW)
     {
         // Make the dude sprite face to the right.
         dudeSprite.setDirection('right');
     }
-    else if (keyCode === UP_ARROW)
+    
+    if (keyCode === UP_ARROW)
     {
         if (!dudeIsJumping) 
         {
-            dudeYPosition = dudeYPosition - 150;
-            dudeSprite.setYPosition(dudeYPosition);
+        dudeSprite.setYPosition(dudeSprite.getYPosition() - 150);
             dudeIsJumping = true;
         }
     }
