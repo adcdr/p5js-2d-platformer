@@ -1,9 +1,7 @@
-let dudeSpriteSheet, dudeSprite;
+let dudeSpriteSheet;
+let dude;
 let platforms = [];
 const groundYPosition = 450;
-let dudeIsMoving = false;
-let dudeIsJumping = false;
-let dudeIsFalling = false;
 let scenery;
 
 /**
@@ -27,12 +25,12 @@ function setup()
 
     // Create a sprite object, with 6 frames.
     dudeSprite = new Sprite(dudeSpriteSheet, 6);
-
-    dudeSprite.setXPosition(400);
-    dudeSprite.setYPosition(groundYPosition - dudeSprite.getHeight());
+    const dudeXPosition = 400;
+    const dudeYPositon = groundYPosition - dudeSprite.height;
+    dude = new Character(dudeSprite, dudeXPosition, dudeYPositon);
 
     // Optionally draw the bounding box.
-    dudeSprite.setShowBoundingBox(true);
+    dude.sprite.boundingBoxIsVisible = true;
 
     // Create a platform.
     // The platform has x position is 50 pixels from the left.
@@ -52,93 +50,79 @@ function setup()
  */
 function draw() 
 {
-    // Set the background color to 0 (black)
     background(0);
+
+    if (keyIsDown(LEFT_ARROW)) 
+    {
+        dude.xPosition = dude.xPosition - 1;
+        dude.isMoving = true;
+    }
+    else if (keyIsDown(RIGHT_ARROW))
+    {
+        dude.xPosition = dude.xPosition + 1;
+        dude.isMoving = true;
+    }
+
+    if (dude.isFalling) 
+    {
+        dude.yPosition = dude.yPosition + 1;
+
+        if (dude.yPosition + dude.height >= groundYPosition) 
+        {
+            dude.isFalling = false;
+        }
+    }
+
+    for (let i = 0; i < platforms.length; i++) 
+    {
+        if (platforms[i].isPlayerCollisionTop(dude.xPosition, dude.yPosition, dude.sprite.width, dude.height)) {
+            dude.isFalling = false;
+            break;
+        } 
+        else if (dude.yPosition + dude.height < groundYPosition) 
+        {
+            dude.isFalling = true;
+        }
+    }
 
     scenery.drawGround(groundYPosition);
 
-    // For every platform in the platforms variable,
-    // draw it to the screen.
     for (let i = 0; i < platforms.length; i++) 
     {
         platforms[i].draw();
     }
 
-    // Draw the dude sprite to the screen.
-    dudeSprite.draw();
-
-    // For every 10th frame animate the dude sprite.
-    // This means we draw the next frame from the sprite sheet.
-    if (dudeIsMoving && frameCount % 10 == 0) 
-    {
-        dudeSprite.animate();
-    }
-
-    if (keyIsDown(LEFT_ARROW)) {
-        // Update dude x position after a key press.
-        dudeSprite.setXPosition(dudeSprite.getXPosition() - 1);
-    }
-    else if (keyIsDown(RIGHT_ARROW)) 
-    {
-        // Update dude x position after a key press.
-        dudeSprite.setXPosition(dudeSprite.getXPosition() + 1);
-    }
-
-    if (dudeIsJumping) 
-    {
-        dudeSprite.setYPosition(dudeSprite.getYPosition() + 1);
-
-        if (dudeSprite.getYPosition() + dudeSprite.getHeight() == groundYPosition) {
-            dudeIsJumping = false;
-        }
-    }
-
-    for (let i = 0; i < platforms.length; i++) 
-    {
-        if (platforms[i].isPlayerCollisionTop(dudeSprite.getXPosition(), dudeSprite.getYPosition(), dudeSprite.getWidth(), dudeSprite.getHeight())) {
-            dudeIsJumping = false;
-            break;
-        } else if (dudeSprite.getYPosition() + dudeSprite.getHeight() < groundYPosition) {
-            dudeIsJumping = true;
-        }
-    }
+    dude.draw();
 }
 
 /**
- * This function is called once when a key is pressed on the keyboard.
+ * This function is called once after a key is pressed on the keyboard.
  *
  * The variable "keyCode" is automatically set with the name of the
  * pressed key.
  */
 function keyPressed() 
 {
-    dudeIsMoving = true;
-
-    // If the left arrow key is pressed.
     if (keyCode === LEFT_ARROW) 
     {
-        // Make the dude sprite face to the left.
-        dudeSprite.setDirection('left');
+        dude.sprite.facingDirection = 'left';
     }
     
-    // If the right arrow key is pressed.
     if (keyCode === RIGHT_ARROW)
     {
-        // Make the dude sprite face to the right.
-        dudeSprite.setDirection('right');
+        dude.sprite.facingDirection = 'right';
     }
     
-    if (keyCode === UP_ARROW)
+    if (keyCode === UP_ARROW && !dude.isFalling) 
     {
-        if (!dudeIsJumping) 
         {
-        dudeSprite.setYPosition(dudeSprite.getYPosition() - 150);
-            dudeIsJumping = true;
+            dude.yPosition = dude.yPosition - 150;
+            dude.isFalling = true;
         }
     }
 }
 
 function keyReleased() 
 {
-    dudeIsMoving = false;
+    dude.isMoving = false;
 }

@@ -1,18 +1,12 @@
 class Sprite {
     constructor(spriteSheet, numberOfFrames) {
-        this.x = 0;
-        this.y = 0;
         this.width = spriteSheet.width / numberOfFrames;
         this.height = spriteSheet.height;
-
         this.frames = this.getFrames(spriteSheet);
         this.currentFrame = 0;
-        this.direction = 'right';
-        this.showBoundingBox = false;
-    }
-
-    setShowBoundingBox(showBoundingBox) {
-        this.showBoundingBox = showBoundingBox;
+        this.facingDirection = 'right';
+        this.previousFacingDirection = this.facingDirection;
+        this.boundingBoxIsVisible = false;
     }
 
     getFrames(spriteSheet) {
@@ -27,71 +21,39 @@ class Sprite {
         return frames;
     }
 
-    draw() {
+    draw(x, y, isMoving) {
         push();
 
-        if (this.showBoundingBox) {
-            noFill();
-            stroke(0, 255, 0);
+        this.updateFrame(isMoving);
+
+        if (this.facingDirection === 'left') {
+            scale(-1, 1);
+            x = -1 * x - this.width;
         }
 
-        if (this.direction === 'left') {
-            const mirroredX = -1 * this.x - this.width
-            scale(-1, 1); // Flip image horizontally.
-            image(this.frames[this.currentFrame], mirroredX, this.y);
+        image(this.frames[this.currentFrame], x, y);
 
-            if (this.showBoundingBox) {
-                rect(mirroredX, this.y, this.width, this.height);
-            }
-        }
-
-        image(this.frames[this.currentFrame], this.x, this.y);
-
-        if (this.showBoundingBox) {
-            rect(this.x, this.y, this.width, this.height);
-        }
+        this.drawBoundingBox(x, y);        
 
         pop();
     }
 
-    animate() {
-        this.currentFrame += 1;
-        this.currentFrame = this.currentFrame % this.frames.length;
-    }
+    updateFrame(isMoving) {
+        if (isMoving) {
+            if (frameCount % 10 == 0) {
+                this.currentFrame += 1;
+                this.currentFrame = this.currentFrame % this.frames.length;
+            }
+        } else {
+            this.currentFrame = 0;
+        }
+    }    
 
-    setDirection(direction) {
-        this.direction = direction;
-    }
-
-    getXPosition() {
-        return this.x;
-    }
-
-    getYPosition() {
-        return this.y;
-    }
-
-    setXPosition(x) {
-        this.x = x;
-    }
-
-    setYPosition(y) {
-        this.y = y;
-    }
-
-    getWidth() {
-        return this.width;
-    }
-
-    getHeight() {
-        return this.height;
-    }
-
-    setWidth(width) {
-        this.width = width;
-    }
-
-    setHeight(height) {
-        this.height = height;
+    drawBoundingBox(x, y) {
+        if (this.boundingBoxIsVisible) {
+            noFill();
+            stroke(0, 255, 0);
+            rect(x, y, this.width, this.height);
+        }
     }
 }
