@@ -5,11 +5,10 @@ class Character {
         this.yPosition = yPosition;
         this.height = sprite.height;
         this.isJumping = false;
-        this.isFalling = false;
         this.isMoving = false;
-
-        this.jumpHeight = 75;
-        this.ySpeed = 0;
+        this.jumpStep = 5;
+        this.jumpDuration = 100;
+        this.jumpTick = 0;
     }
 
     draw() {
@@ -17,10 +16,14 @@ class Character {
     }
 
     jump() {
-        if (this.isJumping && this.x < this.jumpHeight) {
-            
-        }
+        if (this.isJumping) {
+            if (this.jumpTick <= this.jumpDuration) {
+                const relativeJumpTick = this.jumpTick / this.jumpDuration;
+                const yDelta = this.jumpStep * Math.sin(Math.PI * relativeJumpTick);
+                this.yPosition -= yDelta;
 
-        this.yPosition += this.ySpeed;
+                this.jumpTick++;
+            }
+        }
     }
 }
