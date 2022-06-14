@@ -4,11 +4,12 @@ class Character {
         this.xPosition = xPosition;
         this.yPosition = yPosition;
         this.height = sprite.height;
-        this.isJumping = false;
+        this.width = sprite.width;
         this.isMoving = false;
-        this.jumpStep = 5;
-        this.jumpDuration = 100;
-        this.jumpTick = 0;
+        this.isInAir = true;
+        this.yVelocity = 0;
+        this.maxYVelocity = 7;
+        this.gravity = 0.15;
     }
 
     draw() {
@@ -16,14 +17,37 @@ class Character {
     }
 
     jump() {
-        if (this.isJumping) {
-            if (this.jumpTick <= this.jumpDuration) {
-                const relativeJumpTick = this.jumpTick / this.jumpDuration;
-                const yDelta = this.jumpStep * Math.sin(Math.PI * relativeJumpTick);
-                this.yPosition -= yDelta;
+        this.yVelocity = -this.maxYVelocity;
+    }
 
-                this.jumpTick++;
+    applyGravity(groundYPosition, platforms) {
+        if (this.yVelocity >= (-this.maxYVelocity) && this.yVelocity < this.maxYVelocity) {
+            this.yVelocity += this.gravity;
+        }
+
+        if (this.yVelocity > 0) {
+            if (this.isOnGround(groundYPosition) || this.isOnPlatform(platforms)) {
+                this.yVelocity = 0;
+                this.isInAir = true;
             }
         }
+
+        this.yPosition += this.yVelocity;
+    }
+
+    isOnGround() {
+        return groundYPosition - (this.yPosition + this.height) < 1;
+    }
+
+    isOnPlatform(platforms) {
+        for (let i = 0; i < platforms.length; i++)
+        {
+            if (platforms[i].isCollidingWithPlayer(this)) 
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

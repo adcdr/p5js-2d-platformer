@@ -55,29 +55,7 @@ function draw()
         dude.isMoving = true;
     }
 
-    // if (dude.isFalling)
-    // {
-    //     dude.yPosition = dude.yPosition + 1;
-    //
-    //     if (dude.yPosition + dude.height >= groundYPosition)
-    //     {
-    //         dude.isFalling = false;
-    //     }
-    // }
-
-    dude.jump();
-
-    // for (let i = 0; i < platforms.length; i++)
-    // {
-    //     if (platforms[i].isPlayerCollisionTop(dude.xPosition, dude.yPosition, dude.sprite.width, dude.height)) {
-    //         dude.isFalling = false;
-    //         break;
-    //     }
-    //     else if (dude.yPosition + dude.height < groundYPosition)
-    //     {
-    //         dude.isFalling = true;
-    //     }
-    // }
+    dude.applyGravity(groundYPosition, platforms);
 
     scenery.drawGround(groundYPosition);
 
@@ -109,7 +87,10 @@ function keyPressed()
 
     if (keyCode === UP_ARROW)
     {
-        dude.isJumping = true;
+        if (!dude.isJumping && !dude.isFalling)
+        {
+            dude.jump();
+        }
     }
 }
 

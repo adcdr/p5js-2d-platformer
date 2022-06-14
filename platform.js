@@ -1,15 +1,13 @@
 class Platform 
 {
-    constructor(x, y, width, height) 
-    {
+    constructor(x, y, width, height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
     }
 
-    draw() 
-    {
+    draw() {
         push();
 
         fill(200, 20, 20);
@@ -18,17 +16,10 @@ class Platform
         pop();
     }
 
-    isPlayerCollisionTop(playerX, playerY, playerWidth, playerHeight) 
-    {
-        if (playerX + playerWidth >= this.x
-            && playerX <= this.x + this.width
-            && playerY + playerHeight == this.y) 
-        {
-            return true;
+    isCollidingWithPlayer(player) {
+        return (player.xPosition + player.width) >= this.x
+                && player.xPosition <= (this.x + this.width)
+                && parseFloat(player.yPosition + player.height) - this.y < 2
+                && this.y - parseFloat(player.yPosition + player.height) < 2
         }
-        else 
-        {
-            return false;
-        }
-    }
 }
