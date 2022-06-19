@@ -1,8 +1,11 @@
-let dudeSpriteSheet;
-let dude;
+let heroSpriteSheet, coinSpriteSheet;
+let hero;
 let platforms = [];
+let coins = [];
 const groundYPosition = 450;
+const backgroundXPosition = 0;
 let scenery;
+let score = 0;
 
 /**
  * The preload function runs once before anything else.
@@ -10,7 +13,8 @@ let scenery;
  */
 function preload()
 {
-    dudeSpriteSheet = loadImage('assets/sprites/tiny-hero/Dude_Monster/Dude_Monster_Walk_6.png');
+    heroSpriteSheet = loadImage('assets/sprites/tiny-hero/dude_Monster/dude_Monster_Walk_6.png');
+    coinSpriteSheet = loadImage('assets/sprites/coin/coin-sprite.png');
 }
 
 /**
@@ -20,17 +24,25 @@ function preload()
 function setup()
 {
     createCanvas(1000, 600);
+    textSize(18)
 
-    const dudeSprite = new Sprite(dudeSpriteSheet, 6);
-    const dudeXPosition = 400;
-    const dudeYPosition = groundYPosition - dudeSprite.height;
-    dude = new Character(dudeSprite, dudeXPosition, dudeYPosition);
+    const coinSprite = new Sprite(coinSpriteSheet, 6);
+    const heroSprite = new Sprite(heroSpriteSheet, 6);
+    
+    const heroXPosition = 400;
+    const heroYPosition = groundYPosition - heroSprite.height;
 
-    dude.sprite.boundingBoxIsVisible = true;
+    hero = new Character(heroSprite, heroXPosition, heroYPosition);
+    hero.sprite.boundingBoxIsVisible = true;
 
-    platforms[0] = new Platform(50, 50, 100, 20);
-    platforms[1] = new Platform(550, 350, 200, 20);
-    platforms[2] = new Platform(750, 300, 150, 20);
+    platforms[0] = new Platform(750, 80, 100, 20);
+    platforms[1] = new Platform(50, 350, 200, 20);
+    platforms[2] = new Platform(350, 250, 150, 20);
+    
+    coins[0] = new Coin(coinSprite, 790, 55);
+    coins[1] = new Coin(coinSprite, 370, 225);
+    coins[2] = new Coin(coinSprite, 415, 225);
+    coins[3] = new Coin(coinSprite, 460, 225);
 
     scenery = new Scenery();
 }
@@ -44,18 +56,22 @@ function draw()
 {
     background(0);
 
+    push();
+
+        translate(backgroundXPosition, 0);    
+
+    pop();
+
     if (keyIsDown(LEFT_ARROW))
     {
-        dude.xPosition = dude.xPosition - 1;
-        dude.isMoving = true;
+        hero.xVelocity = -1.5;
     }
     else if (keyIsDown(RIGHT_ARROW))
     {
-        dude.xPosition = dude.xPosition + 1;
-        dude.isMoving = true;
+        hero.xVelocity = 1.5;
     }
 
-    dude.applyGravity(groundYPosition, platforms);
+    hero.applyGravity(groundYPosition, platforms);
 
     scenery.drawGround(groundYPosition);
 
@@ -63,8 +79,21 @@ function draw()
     {
         platforms[i].draw();
     }
+    
+    for (let i = 0; i < coins.length; i++)
+    {
+        coins[i].draw();
 
-    dude.draw();
+        if (coins[i].isCollidingWithPlayer(hero)) 
+        {
+            collectCoin(i);
+        }
+    }
+
+    hero.draw();
+
+    fill(255);
+    text('Score: ' + score, 15, 15, 100, 80);
 }
 
 /**
@@ -77,28 +106,31 @@ function keyPressed()
 {
     if (keyCode === LEFT_ARROW)
     {
-        dude.sprite.facingDirection = 'left';
+        hero.sprite.facingDirection = 'left';
     }
 
     if (keyCode === RIGHT_ARROW)
     {
-        dude.sprite.facingDirection = 'right';
+        hero.sprite.facingDirection = 'right';
     }
 
     if (keyCode === UP_ARROW)
     {
-        if (!dude.isJumping && !dude.isFalling)
+        if (!hero.isInAir)
         {
-            dude.jump();
+            hero.yVelocity = -5;
+            hero.isInAir = true;
         }
     }
 }
 
 function keyReleased()
 {
-    dude.isMoving = false;
+    // hero.animate = false;
+    hero.xVelocity = 0;
 }
 
-// function mouseMoved() {
-//     console.log(mouseX, mouseY);
-// }
+function collectCoin(coinIndex) {
+    coins.splice(coinIndex, 1);
+    score = score - 1;
+}

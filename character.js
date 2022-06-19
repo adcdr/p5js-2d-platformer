@@ -5,30 +5,33 @@ class Character {
         this.yPosition = yPosition;
         this.height = sprite.height;
         this.width = sprite.width;
-        this.isMoving = false;
-        this.isInAir = true;
+        this.isInAir = false;
+        this.xVelocity = 0;
         this.yVelocity = 0;
-        this.maxYVelocity = 7;
+        this.terminalYVelocity = 6;
         this.gravity = 0.15;
     }
 
     draw() {
-        this.sprite.draw(this.xPosition, this.yPosition, this.isMoving);
+        const animate = this.xVelocity !== 0;
+        this.xPosition += this.xVelocity;
+
+        this.sprite.draw(this.xPosition, this.yPosition, animate);
     }
 
-    jump() {
-        this.yVelocity = -this.maxYVelocity;
-    }
+    // jump() {
+    //     this.yVelocity = -this.maxYVelocity;
+    //     this.isInAir = true;
+    // }
 
     applyGravity(groundYPosition, platforms) {
-        if (this.yVelocity >= (-this.maxYVelocity) && this.yVelocity < this.maxYVelocity) {
-            this.yVelocity += this.gravity;
-        }
+        if (this.yVelocity > this.terminalYVelocity) this.yVelocity -= this.gravity;
+        if (this.yVelocity < this.terminalYVelocity) this.yVelocity += this.gravity;
 
         if (this.yVelocity > 0) {
             if (this.isOnGround(groundYPosition) || this.isOnPlatform(platforms)) {
                 this.yVelocity = 0;
-                this.isInAir = true;
+                this.isInAir = false;
             }
         }
 
@@ -42,7 +45,7 @@ class Character {
     isOnPlatform(platforms) {
         for (let i = 0; i < platforms.length; i++)
         {
-            if (platforms[i].isCollidingWithPlayer(this)) 
+            if (platforms[i].isTopCollidingWithPlayer(this)) 
             {
                 return true;
             }

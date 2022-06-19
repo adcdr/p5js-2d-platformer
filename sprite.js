@@ -21,10 +21,10 @@ class Sprite {
         return frames;
     }
 
-    draw(x, y, isMoving) {
+    draw(x, y, animate) {
         push();
 
-        this.updateFrame(isMoving);
+        this.updateFrame(animate);
 
         if (this.facingDirection === 'left') {
             scale(-1, 1);
@@ -38,8 +38,8 @@ class Sprite {
         pop();
     }
 
-    updateFrame(isMoving) {
-        if (isMoving) {
+    updateFrame(animate) {
+        if (animate) {
             if (frameCount % 10 == 0) {
                 this.currentFrame += 1;
                 this.currentFrame = this.currentFrame % this.frames.length;

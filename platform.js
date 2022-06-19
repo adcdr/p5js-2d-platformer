@@ -16,10 +16,10 @@ class Platform
         pop();
     }
 
-    isCollidingWithPlayer(player) {
+    isTopCollidingWithPlayer(player) {
         return (player.xPosition + player.width) >= this.x
                 && player.xPosition <= (this.x + this.width)
-                && parseFloat(player.yPosition + player.height) - this.y < 2
-                && this.y - parseFloat(player.yPosition + player.height) < 2
-        }
+                && (player.yPosition + player.height) >= this.y
+                && (player.yPosition + player.height) - this.y <= (player.terminalYVelocity)
+    }
 }
