@@ -17,9 +17,9 @@ class Platform
     }
 
     isTopCollidingWithPlayer(player) {
-        return (player.xPosition + player.width) >= this.x
-                && player.xPosition <= (this.x + this.width)
-                && (player.yPosition + player.height) >= this.y
-                && (player.yPosition + player.height) - this.y <= (player.terminalYVelocity)
+        return (player.x + player.width) >= this.x
+                && player.x <= (this.x + this.width)
+                && (player.y + player.height) >= this.y
+                && (player.y + player.height) - this.y <= (player.terminalYVelocity)
     }
 }

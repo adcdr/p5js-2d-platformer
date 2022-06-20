@@ -1,11 +1,14 @@
-let heroSpriteSheet, coinSpriteSheet;
-let hero;
-let platforms = [];
-let coins = [];
-const groundYPosition = 450;
-const backgroundXPosition = 0;
-let scenery;
-let score = 0;
+var playerSpriteSheet, coinSpriteSheet;
+var player;
+var hearts;
+var platforms = [];
+var coins = [];
+var canyons = [];
+var groundYPosition = 450;
+var backgroundXPosition = 0;
+var scenery;
+var score = 0;
+var livesRemaining = 3;
 
 /**
  * The preload function runs once before anything else.
@@ -13,7 +16,7 @@ let score = 0;
  */
 function preload()
 {
-    heroSpriteSheet = loadImage('assets/sprites/tiny-hero/dude_Monster/dude_Monster_Walk_6.png');
+    playerSpriteSheet = loadImage('assets/sprites/tiny-hero/dude_Monster/dude_Monster_Walk_6.png');
     coinSpriteSheet = loadImage('assets/sprites/coin/coin-sprite.png');
 }
 
@@ -26,23 +29,24 @@ function setup()
     createCanvas(1000, 600);
     textSize(18)
 
-    const coinSprite = new Sprite(coinSpriteSheet, 6);
-    const heroSprite = new Sprite(heroSpriteSheet, 6);
-    
-    const heroXPosition = 400;
-    const heroYPosition = groundYPosition - heroSprite.height;
+    var coinSprite = new Sprite(coinSpriteSheet, 6);
+    var playerSprite = new Sprite(playerSpriteSheet, 6);
 
-    hero = new Character(heroSprite, heroXPosition, heroYPosition);
-    hero.sprite.boundingBoxIsVisible = true;
+    player = new Character(playerSprite, 400, groundYPosition);
+    player.sprite.boundingBoxIsVisible = false;
 
-    platforms[0] = new Platform(750, 80, 100, 20);
-    platforms[1] = new Platform(50, 350, 200, 20);
-    platforms[2] = new Platform(350, 250, 150, 20);
+    hearts = new Hearts(livesRemaining, 900, 15);
+
+    platforms.push(new Platform(750, 80, 100, 20));
+    platforms.push(new Platform(50, 350, 200, 20));
+    platforms.push(new Platform(350, 250, 150, 20));
     
-    coins[0] = new Coin(coinSprite, 790, 55);
-    coins[1] = new Coin(coinSprite, 370, 225);
-    coins[2] = new Coin(coinSprite, 415, 225);
-    coins[3] = new Coin(coinSprite, 460, 225);
+    coins.push(new Coin(coinSprite, 790, 55));
+    coins.push(new Coin(coinSprite, 370, 225));
+    coins.push(new Coin(coinSprite, 415, 225));
+    coins.push(new Coin(coinSprite, 460, 225));
+
+    canyons.push(new Canyon(500, groundYPosition, 200));
 
     scenery = new Scenery();
 }
@@ -56,81 +60,122 @@ function draw()
 {
     background(0);
 
+    checkKeyboardInput();
+
+    player.applyGravity(platforms, canyons);
+
+    scenery.drawGround(groundYPosition);
+
     push();
 
         translate(backgroundXPosition, 0);    
 
     pop();
 
-    if (keyIsDown(LEFT_ARROW))
-    {
-        hero.xVelocity = -1.5;
-    }
-    else if (keyIsDown(RIGHT_ARROW))
-    {
-        hero.xVelocity = 1.5;
-    }
-
-    hero.applyGravity(groundYPosition, platforms);
-
-    scenery.drawGround(groundYPosition);
-
-    for (let i = 0; i < platforms.length; i++)
+    for (var i = 0; i < platforms.length; i++)
     {
         platforms[i].draw();
     }
     
-    for (let i = 0; i < coins.length; i++)
+    for (var i = 0; i < coins.length; i++)
     {
         coins[i].draw();
 
-        if (coins[i].isCollidingWithPlayer(hero)) 
+        if (coins[i].isCollidingWithPlayer(player)) 
         {
             collectCoin(i);
         }
     }
 
-    hero.draw();
+    for (var i = 0; i < canyons.length; i++)
+    {
+        canyons[i].draw();
+    }
+
+    hearts.draw();
+    player.draw();    
+
+    checkDeath();
 
     fill(255);
     text('Score: ' + score, 15, 15, 100, 80);
 }
 
-/**
- * This function is called once after a key is pressed on the keyboard.
- *
- * The variable "keyCode" is automatically set with the name of the
- * pressed key.
- */
-function keyPressed()
+function checkKeyboardInput() 
 {
-    if (keyCode === LEFT_ARROW)
+    if (keyIsDown(LEFT_ARROW))
     {
-        hero.sprite.facingDirection = 'left';
+        player.xVelocity = -2;
     }
 
-    if (keyCode === RIGHT_ARROW)
+    if (keyIsDown(RIGHT_ARROW))
     {
-        hero.sprite.facingDirection = 'right';
+        player.xVelocity = 2;
     }
 
-    if (keyCode === UP_ARROW)
+    if (keyIsDown(UP_ARROW) && player.isInAir === false)
     {
-        if (!hero.isInAir)
-        {
-            hero.yVelocity = -5;
-            hero.isInAir = true;
-        }
+        player.yVelocity = -6;
+        player.isInAir = true;
     }
 }
 
 function keyReleased()
 {
-    // hero.animate = false;
-    hero.xVelocity = 0;
+    player.xVelocity = 0;
 }
 
-function collectCoin(coinIndex) {
+function collectCoin(coinIndex) 
+{
     coins.splice(coinIndex, 1);
     score = score - 1;
+}
+
+function checkDeath() 
+{
+    if (player.hasDied())
+    {
+        livesRemaining = livesRemaining - 1;
+        hearts.count = livesRemaining;
+
+        if (livesRemaining === 0)
+        {
+            gameOver();
+        }
+        else
+        {
+            resetLevel();
+        }
+    }    
+}
+
+function resetLevel() 
+{
+    player.x = 400;
+    player.y = groundYPosition - player.height;
+
+    player.flash();
+}
+
+function gameOver()
+{
+    draw();
+
+    push();
+
+        textSize(32);
+        textStyle(BOLD);
+        textAlign(CENTER);
+
+        fill(143, 143, 143, 200);
+        rect(200, 250, 400, 130);
+
+        fill(255, 49, 18);
+        
+        text('GAME OVER', 400, 300);
+        text('Press space to restart', 400, 350);
+
+    pop();    
+    
+    noLoop();
 }
