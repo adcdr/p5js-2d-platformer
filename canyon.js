@@ -15,7 +15,7 @@ class Canyon {
         pop();
     }
 
-    isPlayerAbove(player) {
+    isPlayerInside(player) {
         return player.x > this.x && (player.x + player.width) < (this.x + this.width);
     }
 }

@@ -1,10 +1,10 @@
 class Coin {
-    constructor(sprite, x, y) {
-        this.sprite = sprite;
+    constructor(spriteSheet, x, y) {
+        this.sprite = new Sprite(spriteSheet, 6);;
         this.x = x;
         this.y = y;
-        this.width = sprite.width;
-        this.height = sprite.height;
+        this.width = this.sprite.width;
+        this.height = this.sprite.height;
     }
 
     draw() {
@@ -12,9 +12,9 @@ class Coin {
     }
 
     isCollidingWithPlayer(player) {
-        return (player.xPosition + player.width) >= this.x
-                && player.xPosition <= (this.x + this.width)
-                && (player.yPosition + player.height) >= this.y
-                && player.yPosition <= (this.y + this.height) 
+        return (player.x + player.width) >= this.x
+                && player.x <= this.x + this.width
+                && (player.y + player.height) >= this.y
+                && player.y <= (this.y + this.height) 
     }
 }

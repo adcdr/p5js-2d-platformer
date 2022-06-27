@@ -5,10 +5,11 @@ var platforms = [];
 var coins = [];
 var canyons = [];
 var groundYPosition = 450;
-var backgroundXPosition = 0;
+var worldXPosition = 0;
 var scenery;
 var score = 0;
 var livesRemaining = 3;
+var gameIsOver = false;
 
 /**
  * The preload function runs once before anything else.
@@ -26,27 +27,24 @@ function preload()
  */
 function setup()
 {
-    createCanvas(1000, 600);
+    createCanvas(1500, 600);
     textSize(18)
 
-    var coinSprite = new Sprite(coinSpriteSheet, 6);
-    var playerSprite = new Sprite(playerSpriteSheet, 6);
-
-    player = new Character(playerSprite, 400, groundYPosition);
+    player = new Character(playerSpriteSheet, groundYPosition);
     player.sprite.boundingBoxIsVisible = false;
 
-    hearts = new Hearts(livesRemaining, 900, 15);
+    hearts = new Hearts(livesRemaining);
 
     platforms.push(new Platform(750, 80, 100, 20));
     platforms.push(new Platform(50, 350, 200, 20));
     platforms.push(new Platform(350, 250, 150, 20));
     
-    coins.push(new Coin(coinSprite, 790, 55));
-    coins.push(new Coin(coinSprite, 370, 225));
-    coins.push(new Coin(coinSprite, 415, 225));
-    coins.push(new Coin(coinSprite, 460, 225));
+    coins.push(new Coin(coinSpriteSheet, 790, 55));
+    coins.push(new Coin(coinSpriteSheet, 370, 225));
+    coins.push(new Coin(coinSpriteSheet, 415, 225));
+    coins.push(new Coin(coinSpriteSheet, 460, 225));
 
-    canyons.push(new Canyon(500, groundYPosition, 200));
+    canyons.push(new Canyon(1200, groundYPosition, 200));
 
     scenery = new Scenery();
 }
@@ -67,10 +65,13 @@ function draw()
     scenery.drawGround(groundYPosition);
 
     push();
+   
+    updateCameraPosition();    
 
-        translate(backgroundXPosition, 0);    
-
-    pop();
+    for (var i = 0; i < canyons.length; i++)
+    {
+        canyons[i].draw();
+    }
 
     for (var i = 0; i < platforms.length; i++)
     {
@@ -87,13 +88,12 @@ function draw()
         }
     }
 
-    for (var i = 0; i < canyons.length; i++)
-    {
-        canyons[i].draw();
-    }
+    player.draw(); 
+    
+    pop();
 
-    hearts.draw();
-    player.draw();    
+
+    hearts.draw();   
 
     checkDeath();
 
@@ -105,12 +105,12 @@ function checkKeyboardInput()
 {
     if (keyIsDown(LEFT_ARROW))
     {
-        player.xVelocity = -2;
+        player.xVelocity = -3;
     }
 
     if (keyIsDown(RIGHT_ARROW))
     {
-        player.xVelocity = 2;
+        player.xVelocity = 3;
     }
 
     if (keyIsDown(UP_ARROW) && player.isInAir === false)
@@ -125,10 +125,18 @@ function keyReleased()
     player.xVelocity = 0;
 }
 
+function keyPressed() 
+{
+    if (keyIsDown(ENTER) && gameIsOver)
+    {
+        restartGame();
+    }
+}
+
 function collectCoin(coinIndex) 
 {
     coins.splice(coinIndex, 1);
-    score = score - 1;
+    score = score + 1;
 }
 
 function checkDeath() 
@@ -140,7 +148,7 @@ function checkDeath()
 
         if (livesRemaining === 0)
         {
-            gameOver();
+            doGameOver();
         }
         else
         {
@@ -151,14 +159,24 @@ function checkDeath()
 
 function resetLevel() 
 {
-    player.x = 400;
-    player.y = groundYPosition - player.height;
-
-    player.flash();
+    player.reset();
 }
 
-function gameOver()
+function restartGame()
 {
+    score = 0;
+    livesRemaining = 3;
+    hearts.count = livesRemaining;
+    gameIsOver = false;
+    worldXPosition = 0;
+
+    player.reset();
+    loop();
+}
+
+function doGameOver()
+{
+    gameIsOver = true;
     draw();
 
     push();
@@ -173,9 +191,25 @@ function gameOver()
         fill(255, 49, 18);
         
         text('GAME OVER', 400, 300);
-        text('Press space to restart', 400, 350);
+        text('Press Enter to restart', 400, 350);
 
     pop();    
     
     noLoop();
+}
+
+function updateCameraPosition()
+{
+    var playerDistanceFromMiddle = Math.abs((player.x + worldXPosition) - (width / 2));
+    
+    if (playerDistanceFromMiddle > 1 && (keyIsDown(RIGHT_ARROW) || keyIsDown(LEFT_ARROW)))
+    {        
+        worldXPosition = worldXPosition - player.xVelocity;
+    }
+
+    translate(worldXPosition, 0);    
+}
+
+function mouseClicked() {
+    console.log(mouseX, player.x)
 }

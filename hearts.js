@@ -1,9 +1,9 @@
 class Hearts {
-    constructor(livesRemaining, x, y) {
+    constructor(livesRemaining) {
         this.count = livesRemaining;
         this.size = 15;
-        this.x = x;
-        this.y = y;
+        this.x = width - 90;
+        this.y = 20;
     }
 
     draw() {
@@ -34,6 +34,7 @@ class Hearts {
 
             endShape(CLOSE);
         }
+
         pop();
     }
 }

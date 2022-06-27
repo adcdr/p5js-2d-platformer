@@ -1,10 +1,10 @@
 class Character {
-    constructor(sprite, x, groundYPosition) {
-        this.sprite = sprite;
+    constructor(spriteSheet, groundYPosition) {
+        this.sprite = new Sprite(spriteSheet, 6);
         this.groundYPosition = groundYPosition;
-        this.height = sprite.height;
-        this.width = sprite.width;
-        this.x = x;
+        this.height = this.sprite.height;
+        this.width = this.sprite.width;
+        this.x = width / 2;
         this.y = groundYPosition - this.height;
         this.isInAir = false;
         this.xVelocity = 0;
@@ -13,6 +13,15 @@ class Character {
         this.gravity = 0.15;
         this.flashCount = 0;
         this.applyTint = false;
+        this.isPlummeting = false;
+    }
+
+    reset() {
+        this.x = width / 2;
+        worldXPosition = 0;
+        this.y = groundYPosition - player.height;
+        this.isPlummeting = false;
+        this.flash();
     }
 
     draw() {
@@ -50,22 +59,21 @@ class Character {
         if (this.yVelocity > this.terminalYVelocity) this.yVelocity -= this.gravity;
         if (this.yVelocity < this.terminalYVelocity) this.yVelocity += this.gravity;
 
-        if (this.yVelocity > 0) {
+        if (this.isInACanyon(canyons)) {
+            this.yVelocity += 5;
+            this.falling = true;
+        } else if (this.yVelocity > 0) {
             if (this.isOnGround(groundYPosition) || this.isOnAPlatform(platforms)) {
                 this.yVelocity = 0;
                 this.isInAir = false;
             }
         }
 
-        if (this.isInACanyon(canyons)) {
-            this.yVelocity += 5;
-        }
-
         this.y += this.yVelocity;
     }
 
     isOnGround() {
-        return this.groundYPosition - (this.y + this.height) < 1;
+        return !this.isPlummeting && this.groundYPosition - (this.y + this.height) < 1;
     }
 
     isOnAPlatform(platforms) {
@@ -81,7 +89,10 @@ class Character {
     isInACanyon(canyons) {
         if ((this.y + this.height) >= this.groundYPosition) {
             for (let i = 0; i < canyons.length; i++) {
-                if (canyons[i].isPlayerAbove(this)) return true;
+                if (canyons[i].isPlayerInside(this, worldXPosition)) {
+                    this.isPlummeting = true;
+                    return true;
+                }
             }
         }
 
