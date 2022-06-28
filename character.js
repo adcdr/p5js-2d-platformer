@@ -1,6 +1,6 @@
 class Character {
-    constructor(spriteSheet, groundYPosition) {
-        this.sprite = new Sprite(spriteSheet, 6);
+    constructor(spriteSheet, frames, groundYPosition) {
+        this.sprite = new Sprite(spriteSheet, frames);
         this.groundYPosition = groundYPosition;
         this.height = this.sprite.height;
         this.width = this.sprite.width;
@@ -14,15 +14,7 @@ class Character {
         this.flashCount = 0;
         this.applyTint = false;
         this.isPlummeting = false;
-    }
-
-    reset() {
-        this.x = width / 2;
-        worldXPosition = 0;
-        this.y = groundYPosition - player.height;
-        this.isPlummeting = false;
-        this.flash();
-    }
+    }    
 
     draw() {
         const animate = this.xVelocity !== 0;
@@ -89,19 +81,11 @@ class Character {
     isInACanyon(canyons) {
         if ((this.y + this.height) >= this.groundYPosition) {
             for (let i = 0; i < canyons.length; i++) {
-                if (canyons[i].isPlayerInside(this, worldXPosition)) {
+                if (canyons[i].isPlayerInside(this)) {
                     this.isPlummeting = true;
                     return true;
                 }
             }
-        }
-
-        return false;
-    }
-
-    hasDied() {
-        if (this.y > height) {
-            return true;
         }
 
         return false;

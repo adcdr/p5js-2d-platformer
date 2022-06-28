@@ -1,9 +1,9 @@
-var playerSpriteSheet, coinSpriteSheet;
 var player;
 var hearts;
 var platforms = [];
 var coins = [];
 var canyons = [];
+var enemies = [];
 var groundYPosition = 450;
 var worldXPosition = 0;
 var scenery;
@@ -18,6 +18,7 @@ var gameIsOver = false;
 function preload()
 {
     playerSpriteSheet = loadImage('assets/sprites/tiny-hero/dude_Monster/dude_Monster_Walk_6.png');
+    enemySpriteSheet = loadImage('assets/sprites/slime.png');
     coinSpriteSheet = loadImage('assets/sprites/coin/coin-sprite.png');
 }
 
@@ -30,8 +31,8 @@ function setup()
     createCanvas(1500, 600);
     textSize(18)
 
-    player = new Character(playerSpriteSheet, groundYPosition);
-    player.sprite.boundingBoxIsVisible = false;
+    player = new Player(playerSpriteSheet, groundYPosition);
+    // player.sprite.boundingBoxIsVisible = false;
 
     hearts = new Hearts(livesRemaining);
 
@@ -45,6 +46,8 @@ function setup()
     coins.push(new Coin(coinSpriteSheet, 460, 225));
 
     canyons.push(new Canyon(1200, groundYPosition, 200));
+
+    enemies.push(new Enemy(enemySpriteSheet, groundYPosition, 100, 200, 1.5));
 
     scenery = new Scenery();
 }
@@ -66,29 +69,34 @@ function draw()
 
     push();
    
-    updateCameraPosition();    
+        updateWorldXPosition();    
 
-    for (var i = 0; i < canyons.length; i++)
-    {
-        canyons[i].draw();
-    }
-
-    for (var i = 0; i < platforms.length; i++)
-    {
-        platforms[i].draw();
-    }
-    
-    for (var i = 0; i < coins.length; i++)
-    {
-        coins[i].draw();
-
-        if (coins[i].isCollidingWithPlayer(player)) 
+        for (var i = 0; i < canyons.length; i++)
         {
-            collectCoin(i);
+            canyons[i].draw();
         }
-    }
 
-    player.draw(); 
+        for (var i = 0; i < platforms.length; i++)
+        {
+            platforms[i].draw();
+        }
+        
+        for (var i = 0; i < coins.length; i++)
+        {
+            coins[i].draw();
+
+            if (coins[i].isCollidingWithPlayer(player)) 
+            {
+                collectCoin(i);
+            }
+        }
+
+        for (var i = 0; i < enemies.length; i++)
+        {
+            enemies[i].draw();
+        }
+
+        player.draw(); 
     
     pop();
 
@@ -198,7 +206,7 @@ function doGameOver()
     noLoop();
 }
 
-function updateCameraPosition()
+function updateWorldXPosition()
 {
     var playerDistanceFromMiddle = Math.abs((player.x + worldXPosition) - (width / 2));
     
