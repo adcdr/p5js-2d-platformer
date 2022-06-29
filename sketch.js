@@ -31,7 +31,7 @@ function setup()
     createCanvas(1500, 600);
     textSize(18)
 
-    player = new Player(playerSpriteSheet, groundYPosition);
+    player = new Player(playerSpriteSheet);
     // player.sprite.boundingBoxIsVisible = false;
 
     hearts = new Hearts(livesRemaining);
@@ -47,7 +47,7 @@ function setup()
 
     canyons.push(new Canyon(1200, groundYPosition, 200));
 
-    enemies.push(new Enemy(enemySpriteSheet, groundYPosition, 100, 200, 1.5));
+    enemies.push(new Enemy(enemySpriteSheet, 350, 500, 250, 1.5));
 
     scenery = new Scenery();
 }
@@ -62,8 +62,6 @@ function draw()
     background(0);
 
     checkKeyboardInput();
-
-    player.applyGravity(platforms, canyons);
 
     scenery.drawGround(groundYPosition);
 
@@ -93,14 +91,13 @@ function draw()
 
         for (var i = 0; i < enemies.length; i++)
         {
-            enemies[i].draw();
+            enemies[i].update();
         }
 
-        player.draw(); 
+        player.update(); 
     
     pop();
-
-
+    
     hearts.draw();   
 
     checkDeath();
@@ -168,6 +165,13 @@ function checkDeath()
 function resetLevel() 
 {
     player.reset();
+
+    for (let i = 0; i < enemies.length; i++)
+    {
+        enemies[i].reset();
+    }
+
+    loop();
 }
 
 function restartGame()
@@ -183,9 +187,9 @@ function restartGame()
 }
 
 function doGameOver()
-{
+{    
+    noLoop();
     gameIsOver = true;
-    draw();
 
     push();
 
@@ -201,9 +205,9 @@ function doGameOver()
         text('GAME OVER', 400, 300);
         text('Press Enter to restart', 400, 350);
 
-    pop();    
-    
-    noLoop();
+    pop();
+
+    redraw();
 }
 
 function updateWorldXPosition()
@@ -218,6 +222,7 @@ function updateWorldXPosition()
     translate(worldXPosition, 0);    
 }
 
-function mouseClicked() {
-    console.log(mouseX, player.x)
+function mouseClicked()
+{
+    console.log(mouseX, mouseY)
 }

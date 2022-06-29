@@ -1,6 +1,6 @@
 class Player extends Character {
-    constructor(spriteSheet, groundYPosition) {
-        super(spriteSheet, 6, groundYPosition);
+    constructor(spriteSheet) {
+        super(spriteSheet, 6);
     }
 
     reset() {
@@ -12,8 +12,16 @@ class Player extends Character {
     }
 
     hasDied() {
-        if (this.y > height) {
+        if (this.y > height || this.isInContactWithEnemy()) {
             return true;
+        }
+
+        return false;
+    }
+
+    isInContactWithEnemy() {
+        for (let i = 0; i < enemies.length; i++) {
+            if (enemies[i].isInContactWithPlayer()) return true;
         }
 
         return false;

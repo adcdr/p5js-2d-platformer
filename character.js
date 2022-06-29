@@ -1,7 +1,6 @@
 class Character {
-    constructor(spriteSheet, frames, groundYPosition) {
+    constructor(spriteSheet, frames) {
         this.sprite = new Sprite(spriteSheet, frames);
-        this.groundYPosition = groundYPosition;
         this.height = this.sprite.height;
         this.width = this.sprite.width;
         this.x = width / 2;
@@ -16,7 +15,9 @@ class Character {
         this.isPlummeting = false;
     }    
 
-    draw() {
+    update() {
+        this.applyGravity();
+
         const animate = this.xVelocity !== 0;
         this.x += this.xVelocity;
 
@@ -47,15 +48,15 @@ class Character {
         this.flashCount = 6;
     }
 
-    applyGravity(platforms, canyons) {
+    applyGravity() {
         if (this.yVelocity > this.terminalYVelocity) this.yVelocity -= this.gravity;
         if (this.yVelocity < this.terminalYVelocity) this.yVelocity += this.gravity;
 
-        if (this.isInACanyon(canyons)) {
+        if (this.isInACanyon()) {
             this.yVelocity += 5;
             this.falling = true;
         } else if (this.yVelocity > 0) {
-            if (this.isOnGround(groundYPosition) || this.isOnAPlatform(platforms)) {
+            if (this.isOnGround() || this.isOnAPlatform()) {
                 this.yVelocity = 0;
                 this.isInAir = false;
             }
@@ -65,10 +66,10 @@ class Character {
     }
 
     isOnGround() {
-        return !this.isPlummeting && this.groundYPosition - (this.y + this.height) < 1;
+        return !this.isPlummeting && groundYPosition - (this.y + this.height) < 1;
     }
 
-    isOnAPlatform(platforms) {
+    isOnAPlatform() {
         for (let i = 0; i < platforms.length; i++) {
             if (platforms[i].isTopCollidingWithPlayer(this)) {
                 return true;
@@ -78,8 +79,8 @@ class Character {
         return false;
     }
 
-    isInACanyon(canyons) {
-        if ((this.y + this.height) >= this.groundYPosition) {
+    isInACanyon() {
+        if ((this.y + this.height) >= groundYPosition) {
             for (let i = 0; i < canyons.length; i++) {
                 if (canyons[i].isPlayerInside(this)) {
                     this.isPlummeting = true;
