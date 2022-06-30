@@ -1,5 +1,6 @@
 class Sprite {
     constructor(spriteSheet, numberOfFrames) {
+        this.numberOfFrames = numberOfFrames;
         this.width = spriteSheet.width / numberOfFrames;
         this.height = spriteSheet.height;
         this.frames = this.getFrames(spriteSheet);
@@ -40,7 +41,7 @@ class Sprite {
 
     updateFrame(animate) {
         if (animate) {
-            if (frameCount % 10 == 0) {
+            if (frameCount % (20 - this.numberOfFrames) == 0) {
                 this.currentFrame += 1;
                 this.currentFrame = this.currentFrame % this.frames.length;
             }

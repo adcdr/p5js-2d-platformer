@@ -1,6 +1,6 @@
 class Enemy extends Character {
     constructor(spriteSheet, xMin, xMax, y, speed) {
-        super(spriteSheet, 8);
+        super(spriteSheet, 2);
                 
         this.xMin = xMin;
         this.xMax = xMax;

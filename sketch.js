@@ -17,8 +17,8 @@ var gameIsOver = false;
  */
 function preload()
 {
-    playerSpriteSheet = loadImage('assets/sprites/tiny-hero/dude_Monster/dude_Monster_Walk_6.png');
-    enemySpriteSheet = loadImage('assets/sprites/slime.png');
+    playerSpriteSheet = loadImage('assets/sprites/purple_monster.png');
+    enemySpriteSheet = loadImage('assets/sprites/green_slime.png');
     coinSpriteSheet = loadImage('assets/sprites/coin/coin-sprite.png');
 }
 

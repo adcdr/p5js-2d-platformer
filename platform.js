@@ -10,7 +10,11 @@ class Platform
     draw() {
         push();
 
-        fill(200, 20, 20);
+        fill(110, 0, 0);
+
+        strokeWeight(4);
+        stroke(224, 7, 7);
+
         rect(this.x, this.y, this.width, this.height);
 
         pop();

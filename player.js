@@ -1,6 +1,6 @@
 class Player extends Character {
     constructor(spriteSheet) {
-        super(spriteSheet, 6);
+        super(spriteSheet, 16);
     }
 
     reset() {

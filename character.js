@@ -28,16 +28,12 @@ class Character {
 
         push()
             if (this.flashCount > 0) {
-                if (frameCount % 20 === 0) {
+                if (frameCount % 10 === 0) {
                     this.applyTint = !this.applyTint;
                     this.flashCount--;
                 }
 
-                if (this.applyTint) {
-                    tint(255, 100);
-                } else {
-                    tint(255, 255);
-                }
+                this.applyTint ? tint(255, 20) : tint(255, 255);
             }
 
             this.sprite.draw(this.x, this.y, animate);
@@ -66,12 +62,16 @@ class Character {
     }
 
     isOnGround() {
-        return !this.isPlummeting && groundYPosition - (this.y + this.height) < 1;
+        if (!this.isPlummeting && groundYPosition - (this.y + this.height) < 1) {
+            this.y = groundYPosition - this.height;
+            return true;
+        }
     }
 
     isOnAPlatform() {
         for (let i = 0; i < platforms.length; i++) {
-            if (platforms[i].isTopCollidingWithPlayer(this)) {
+            if (platforms[i].isTopCollidingWithPlayer(this)) {                
+                this.y = platforms[i].y - this.height;
                 return true;
             }
         }
