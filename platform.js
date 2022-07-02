@@ -10,12 +10,40 @@ class Platform
     draw() {
         push();
 
-        fill(110, 0, 0);
+        // fill(30, 0, 0);
 
-        strokeWeight(4);
+        // strokeWeight(4);
+        // stroke(224, 7, 7);
+
+        // rect(this.x, this.y, this.width, this.height);
+        const drawingLineWidth = 2;
+
+        strokeWeight(drawingLineWidth * 2);
         stroke(224, 7, 7);
 
-        rect(this.x, this.y, this.width, this.height);
+        beginShape(LINES);
+
+        rect(this.x, this.y + drawingLineWidth, this.width, 1);
+        rect(this.x, this.y + this.height, this.width, 1);
+
+        const spacing = 10;
+        const wholeSegments = Math.floor(this.width / (2 * spacing));
+
+        for (let i = 0; i < wholeSegments; i++) {
+            vertex(this.x + (i*spacing) + i*spacing, this.y + drawingLineWidth);
+            vertex(this.x + ((i+1)*spacing) + i*spacing, this.y + this.height);
+            vertex(this.x + ((i+1)*spacing) + i*spacing, this.y + this.height);
+            vertex(this.x + ((i+2)*spacing) + i*spacing, this.y + drawingLineWidth);
+        }
+
+        const finalSegmentWidth = this.width - (wholeSegments * spacing * 2);
+
+        if (finalSegmentWidth > 5) {
+            vertex(this.x + wholeSegments * spacing * 2, this.y + drawingLineWidth);
+            vertex(this.x + wholeSegments * spacing * 2 + finalSegmentWidth, this.y + this.height);
+        }
+
+        endShape();
 
         pop();
     }

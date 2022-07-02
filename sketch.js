@@ -36,7 +36,7 @@ function setup()
 
     hearts = new Hearts(livesRemaining);
 
-    platforms.push(new Platform(750, 80, 100, 20));
+    platforms.push(new Platform(750, 80, 133, 20));
     platforms.push(new Platform(50, 350, 200, 20));
     platforms.push(new Platform(350, 250, 150, 20));
     
