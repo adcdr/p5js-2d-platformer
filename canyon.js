@@ -1,21 +1,19 @@
 class Canyon {
-    constructor(x, y, width) {
+    constructor(x, width) {
         this.x = x;
-        this.y = y;
         this.width = width;
-        this.height = height - y;
     }
 
     draw() {
         push();
 
             fill(0);
-            rect(this.x, this.y, this.width, this.height);
+            rect(this.x, groundYPosition, this.width, windowHeight);
 
         pop();
     }
 
     isPlayerInside(player) {
-        return player.x > this.x && (player.x + player.width) < (this.x + this.width);
+        return player.x + 15 > this.x && (player.x + player.width - 15) < (this.x + this.width);
     }
 }

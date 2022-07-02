@@ -2,10 +2,12 @@ var player;
 var hearts;
 var platforms = [];
 var coins = [];
+var originalCoins = [];
 var canyons = [];
 var enemies = [];
-var groundYPosition = 450;
 var worldXPosition = 0;
+var worldHeight = 1000;
+var groundYPosition = worldHeight * 0.8;
 var scenery;
 var score = 0;
 var livesRemaining = 3;
@@ -28,28 +30,28 @@ function preload()
  */
 function setup()
 {
-    createCanvas(1500, 600);
-    textSize(18)
+    createCanvas(windowWidth, worldHeight);
+    textSize(18);
 
     player = new Player(playerSpriteSheet);
-    // player.sprite.boundingBoxIsVisible = false;
+    // player.sprite.boundingBoxIsVisible = true;
 
     hearts = new Hearts(livesRemaining);
-
-    platforms.push(new Platform(750, 80, 133, 20));
-    platforms.push(new Platform(50, 350, 200, 20));
-    platforms.push(new Platform(350, 250, 150, 20));
+    platforms.push(new MovingPlatform(50, 100, 200, 20, 100, 2, 'VERTICAL'));
+    platforms.push(new MovingPlatform(350, 200, 150, 20, 100, 2, 'HORIZONTAL'));
+    platforms.push(new Platform(750, 370, 133, 20));
     
-    coins.push(new Coin(coinSpriteSheet, 790, 55));
-    coins.push(new Coin(coinSpriteSheet, 370, 225));
-    coins.push(new Coin(coinSpriteSheet, 415, 225));
-    coins.push(new Coin(coinSpriteSheet, 460, 225));
+    coins.push(new Coin(coinSpriteSheet, 415, 230));
+    coins.push(new Coin(coinSpriteSheet, 810, 400));
 
-    canyons.push(new Canyon(1200, groundYPosition, 200));
+    canyons.push(new Canyon(1200, 200));
 
-    enemies.push(new Enemy(enemySpriteSheet, 350, 500, 250, 1.5));
+    enemies.push(new Enemy(enemySpriteSheet, 350, 500, 200, 1.5));
+    // enemies[0].sprite.boundingBoxIsVisible = true;
 
     scenery = new Scenery();
+
+    copyCoins(coins, originalCoins);
 }
 
 /**
@@ -69,30 +71,27 @@ function draw()
    
         updateWorldXPosition();    
 
-        for (var i = 0; i < canyons.length; i++)
-        {
-            canyons[i].draw();
-        }
+        canyons.forEach(canyon => {
+            canyon.draw();
+        });
 
-        for (var i = 0; i < platforms.length; i++)
-        {
-            platforms[i].draw();
-        }
+        platforms.forEach(platform => {
+            platform.update();
+            platform.draw();
+        });
         
-        for (var i = 0; i < coins.length; i++)
-        {
-            coins[i].draw();
+        coins.forEach((coin, index) => {
+            coin.draw();
 
-            if (coins[i].isCollidingWithPlayer(player)) 
+            if (coin.isInContactWithPlayer()) 
             {
-                collectCoin(i);
+                collectCoin(index);
             }
-        }
+        });
 
-        for (var i = 0; i < enemies.length; i++)
-        {
-            enemies[i].update();
-        }
+        enemies.forEach(enemy => {
+            enemy.update();
+        });
 
         player.update(); 
     
@@ -103,7 +102,7 @@ function draw()
     checkDeath();
 
     fill(255);
-    text('Score: ' + score, 15, 15, 100, 80);
+    text('Score: ' + score, 20, 20, 100, 80);
 }
 
 function checkKeyboardInput() 
@@ -132,7 +131,7 @@ function keyReleased()
 
 function keyPressed() 
 {
-    if (keyIsDown(ENTER) && gameIsOver)
+    if (gameIsOver && keyIsDown(ENTER))
     {
         restartGame();
     }
@@ -146,7 +145,7 @@ function collectCoin(coinIndex)
 
 function checkDeath() 
 {
-    if (player.hasDied())
+    if (!this.gameIsOver && player.hasDied())
     {
         livesRemaining = livesRemaining - 1;
         hearts.count = livesRemaining;
@@ -183,12 +182,18 @@ function restartGame()
     worldXPosition = 0;
 
     player.reset();
+
+    enemies.forEach(enemy => {
+        enemy.reset();
+    });
+
+    copyCoins(originalCoins, coins) 
+
     loop();
 }
 
 function doGameOver()
-{    
-    noLoop();
+{
     gameIsOver = true;
 
     push();
@@ -197,17 +202,20 @@ function doGameOver()
         textStyle(BOLD);
         textAlign(CENTER);
 
-        fill(143, 143, 143, 200);
-        rect(200, 250, 400, 130);
-
-        fill(255, 49, 18);
+        fill(173, 177, 222);
+        rect((width - 400) / 2 - 10, (height - 300) / 2 - 10, 420, 150);
         
-        text('GAME OVER', 400, 300);
-        text('Press Enter to restart', 400, 350);
+        fill(34, 47, 191);
+        rect((width - 400) / 2, (height - 300) / 2, 400, 130);
+
+        fill(255);
+        
+        text('GAME OVER', (width - 400)/2 + 200, (height - 300)/2 + 50);
+        text('Press "enter" to restart...', (width - 400)/2 + 200, (height - 300)/2 + 100);
 
     pop();
-
-    redraw();
+    
+    noLoop();
 }
 
 function updateWorldXPosition()
@@ -222,7 +230,28 @@ function updateWorldXPosition()
     translate(worldXPosition, 0);    
 }
 
-function mouseClicked()
+function windowResized() 
 {
-    console.log(mouseX, mouseY)
+    resizeCanvas(windowWidth, worldHeight);
+
+    hearts.x = width - 90;
+
+    platforms.forEach(platform => {
+        platform.updateYPosition();
+    });
+
+    enemies.forEach(enemy => {
+        enemy.updateYPosition();
+    });
+
+    coins.forEach(coin => {
+        coin.updateYPosition();
+    });
+}
+
+function copyCoins(coinsA, coinsB) 
+{
+    coinsA.forEach(coin => {
+        coinsB.push(coin);
+    });
 }

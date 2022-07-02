@@ -70,7 +70,7 @@ class Character {
 
     isOnAPlatform() {
         for (let i = 0; i < platforms.length; i++) {
-            if (platforms[i].isTopCollidingWithPlayer(this)) {                
+            if (platforms[i].isCharacterOnTop(this)) {
                 this.y = platforms[i].y - this.height;
                 return true;
             }

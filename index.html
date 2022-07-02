@@ -3,12 +3,18 @@
   <head>
     <style> 
       body {
-        padding: 0px; margin: 0px;
-        background-color: rgb(41, 41, 41);
+        padding: 0px; 
+        margin: 0px;
+        background-color: rgb(66, 66, 66);
       } 
 
       canvas {
-        padding: 80px;
+        padding: 0px;
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
       }
     </style>
 
@@ -19,6 +25,7 @@
     <script src="player.js"></script>
     <script src="enemy.js"></script>
     <script src="platform.js"></script>
+    <script src="moving-platform.js"></script>
     <script src="coin.js"></script>
     <script src="canyon.js"></script>
     <script src="hearts.js"></script>

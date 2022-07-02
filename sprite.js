@@ -54,7 +54,8 @@ class Sprite {
         if (this.boundingBoxIsVisible) {
             noFill();
             stroke(0, 255, 0);
-            rect(x, y, this.width, this.height);
+            // rect(x, y, this.width, this.height);
+            ellipse(x + this.width / 2, (y + this.height / 2), this.width, this.height);
         }
     }
 }
