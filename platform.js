@@ -1,18 +1,13 @@
 class Platform 
 {
-    constructor(x, distanceAboveGround, width, height) {
+    constructor(x, y, width, height) {
         this.x = x;
-        this.distanceAboveGround = distanceAboveGround;
-        this.y = groundYPosition - distanceAboveGround;
+        this.y = y;
         this.width = width;
         this.height = height;
     }
 
     update() {}
-
-    updateYPosition() {
-        this.y = groundYPosition - this.distanceAboveGround;
-    }
 
     draw() {
         push();

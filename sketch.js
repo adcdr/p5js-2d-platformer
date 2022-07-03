@@ -5,18 +5,17 @@ var coins = [];
 var originalCoins = [];
 var canyons = [];
 var enemies = [];
+var fireworks = [];
 var worldXPosition = 0;
 var worldHeight = 1000;
 var groundYPosition = worldHeight * 0.8;
 var scenery;
 var score = 0;
+var scoreToWin = 10;
 var livesRemaining = 3;
-var gameIsOver = false;
+var gameLost = false;
+var gameWon = false;
 
-/**
- * The preload function runs once before anything else.
- * It is used to run tasks that take a long time, such as loading images.
- */
 function preload()
 {
     playerSpriteSheet = loadImage('assets/sprites/purple_monster.png');
@@ -24,46 +23,27 @@ function preload()
     coinSpriteSheet = loadImage('assets/sprites/coin/coin-sprite.png');
 }
 
-/**
- * The setup function also runs once after setup()
- * but before any other functions run.
- */
 function setup()
 {
     createCanvas(windowWidth, worldHeight);
     textSize(18);
 
     player = new Player(playerSpriteSheet);
-    // player.sprite.boundingBoxIsVisible = true;
 
     hearts = new Hearts(livesRemaining);
-    platforms.push(new MovingPlatform(50, 100, 200, 20, 100, 2, 'VERTICAL'));
-    platforms.push(new MovingPlatform(350, 200, 150, 20, 100, 2, 'HORIZONTAL'));
-    platforms.push(new Platform(750, 370, 133, 20));
-    
-    coins.push(new Coin(coinSpriteSheet, 415, 230));
-    coins.push(new Coin(coinSpriteSheet, 810, 400));
 
-    canyons.push(new Canyon(1200, 200));
-
-    enemies.push(new Enemy(enemySpriteSheet, 350, 500, 200, 1.5));
-    // enemies[0].sprite.boundingBoxIsVisible = true;
+    createWorldItems();
 
     scenery = new Scenery();
 
     copyCoins(coins, originalCoins);
 }
 
-/**
- * This is the main game loop.
- * It is called once for every frame in the game.
- * It runs forever.
- */
 function draw()
 {
     background(0);
 
-    checkKeyboardInput();
+    checkKeyDown();
 
     scenery.drawGround(groundYPosition);
 
@@ -103,37 +83,10 @@ function draw()
 
     fill(255);
     text('Score: ' + score, 20, 20, 100, 80);
-}
 
-function checkKeyboardInput() 
-{
-    if (keyIsDown(LEFT_ARROW))
+    if (gameWon)
     {
-        player.xVelocity = -3;
-    }
-
-    if (keyIsDown(RIGHT_ARROW))
-    {
-        player.xVelocity = 3;
-    }
-
-    if (keyIsDown(UP_ARROW) && player.isInAir === false)
-    {
-        player.yVelocity = -6;
-        player.isInAir = true;
-    }
-}
-
-function keyReleased()
-{
-    player.xVelocity = 0;
-}
-
-function keyPressed() 
-{
-    if (gameIsOver && keyIsDown(ENTER))
-    {
-        restartGame();
+        doGameWon();
     }
 }
 
@@ -141,11 +94,16 @@ function collectCoin(coinIndex)
 {
     coins.splice(coinIndex, 1);
     score = score + 1;
+
+    if (score === scoreToWin)
+    {
+        gameWon = true;
+    }
 }
 
 function checkDeath() 
 {
-    if (!this.gameIsOver && player.hasDied())
+    if (!this.gameLost && player.hasDied())
     {
         livesRemaining = livesRemaining - 1;
         hearts.count = livesRemaining;
@@ -178,7 +136,7 @@ function restartGame()
     score = 0;
     livesRemaining = 3;
     hearts.count = livesRemaining;
-    gameIsOver = false;
+    gameLost = false;
     worldXPosition = 0;
 
     player.reset();
@@ -192,39 +150,13 @@ function restartGame()
     loop();
 }
 
-function doGameOver()
-{
-    gameIsOver = true;
-
-    push();
-
-        textSize(32);
-        textStyle(BOLD);
-        textAlign(CENTER);
-
-        fill(173, 177, 222);
-        rect((width - 400) / 2 - 10, (height - 300) / 2 - 10, 420, 150);
-        
-        fill(34, 47, 191);
-        rect((width - 400) / 2, (height - 300) / 2, 400, 130);
-
-        fill(255);
-        
-        text('GAME OVER', (width - 400)/2 + 200, (height - 300)/2 + 50);
-        text('Press "enter" to restart...', (width - 400)/2 + 200, (height - 300)/2 + 100);
-
-    pop();
-    
-    noLoop();
-}
-
 function updateWorldXPosition()
 {
     var playerDistanceFromMiddle = Math.abs((player.x + worldXPosition) - (width / 2));
     
-    if (playerDistanceFromMiddle > 1 && (keyIsDown(RIGHT_ARROW) || keyIsDown(LEFT_ARROW)))
+    if (playerDistanceFromMiddle !== 0 && (keyIsDown(RIGHT_ARROW) || keyIsDown(LEFT_ARROW)))
     {        
-        worldXPosition = worldXPosition - player.xVelocity;
+        worldXPosition = worldXPosition - player.velocity.x;
     }
 
     translate(worldXPosition, 0);    
@@ -254,4 +186,56 @@ function copyCoins(coinsA, coinsB)
     coinsA.forEach(coin => {
         coinsB.push(coin);
     });
+}
+
+function doGameWon()
+{
+    push();
+
+    if (random(1) < 0.03) {
+        fireworks.push(new Firework());
+    }
+      
+    for (let i = fireworks.length - 1; i >= 0; i--) {
+        fireworks[i].update();
+        fireworks[i].show();
+        
+        if (fireworks[i].done()) {
+          fireworks.splice(i, 1);
+        }
+    }
+
+    displayMessage('Congratulations', 'YOU WIN!');
+
+    pop();
+}
+
+function doGameOver()
+{
+    gameLost = true;
+
+    displayMessage('GAME OVER', 'Press "enter" to restart...');
+    noLoop();
+}
+
+function displayMessage(line1, line2)
+{
+    push();
+
+    textSize(32);
+    textStyle(BOLD);
+    textAlign(CENTER);
+
+    fill(173, 177, 222);
+    rect((width - 400) / 2 - 10, (height - 300) / 2 - 10, 420, 150);
+    
+    fill(34, 47, 191);
+    rect((width - 400) / 2, (height - 300) / 2, 400, 130);
+
+    fill(255);
+    
+    text(line1, (width - 400)/2 + 200, (height - 300)/2 + 50);
+    text(line2, (width - 400)/2 + 200, (height - 300)/2 + 100);
+
+    pop();
 }

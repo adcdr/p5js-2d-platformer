@@ -1,6 +1,6 @@
 class MovingPlatform extends Platform {
-    constructor(x, distanceAboveGround, width, height, range, speed, direction) {
-        super(x, distanceAboveGround, width, height);
+    constructor(x, y, width, height, range, speed, direction) {
+        super(x, y, width, height);
 
         if (direction === 'HORIZONTAL') {
             this.direction = 0;
@@ -22,7 +22,7 @@ class MovingPlatform extends Platform {
                 if (this.x > this.rangeMin) {
                     this.x -= this.speed;
 
-                    if (super.isCharacterOnTop(player)) player.x -= this.speed;
+                    if (this.isCharacterOnTop(player)) player.x -= this.speed;
                 } else {
                     this.movingPositiveDirection = false;
                 }
@@ -30,7 +30,7 @@ class MovingPlatform extends Platform {
                 if (this.x < this.rangeMax) {
                     this.x += this.speed;
 
-                    if (super.isCharacterOnTop(player)) player.x += this.speed;
+                    if (this.isCharacterOnTop(player)) player.x += this.speed;
                 } else {
                     this.movingPositiveDirection = true;
                 }
@@ -40,7 +40,7 @@ class MovingPlatform extends Platform {
                 if (this.y > this.rangeMin) {
                     this.y -= this.speed;
 
-                    if (super.isCharacterOnTop(player)) player.y -= this.speed;
+                    if (this.isCharacterOnTop(player)) player.y -= this.speed;
                 } else {
                     this.movingPositiveDirection = false;
                 }
@@ -48,7 +48,7 @@ class MovingPlatform extends Platform {
                 if (this.y < this.rangeMax) {
                     this.y += this.speed;
 
-                    if (super.isCharacterOnTop(player)) player.y += this.speed;
+                    if (this.isCharacterOnTop(player)) player.y += this.speed;
                 } else {
                     this.movingPositiveDirection = true;
                 }

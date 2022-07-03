@@ -6,8 +6,9 @@ class Character {
         this.x = width / 2;
         this.y = groundYPosition - this.height;
         this.isInAir = false;
-        this.xVelocity = 0;
-        this.yVelocity = 0;
+        this.velocity = createVector(0, 0);
+        this.velocity.x = 0;
+        this.velocity.y = 0;
         this.terminalYVelocity = 6;
         this.gravity = 0.15;
         this.flashCount = 0;
@@ -18,12 +19,12 @@ class Character {
     update() {
         this.applyGravity();
 
-        const animate = this.xVelocity !== 0;
-        this.x += this.xVelocity;
+        const animate = this.velocity.x !== 0;
+        this.x += this.velocity.x;
 
-        if (this.xVelocity < 0) 
+        if (this.velocity.x < 0) 
             this.sprite.facingDirection = 'left';
-        else 
+        else if (this.velocity.x !== 0) 
             this.sprite.facingDirection = 'right'
 
         push()
@@ -45,20 +46,20 @@ class Character {
     }
 
     applyGravity() {
-        if (this.yVelocity > this.terminalYVelocity) this.yVelocity -= this.gravity;
-        if (this.yVelocity < this.terminalYVelocity) this.yVelocity += this.gravity;
+        if (this.velocity.y > this.terminalYVelocity) this.velocity.y -= this.gravity;
+        if (this.velocity.y < this.terminalYVelocity) this.velocity.y += this.gravity;
 
         if (this.isInACanyon()) {
-            this.yVelocity += 5;
+            this.velocity.y += 5;
             this.falling = true;
-        } else if (this.yVelocity > 0) {
+        } else if (this.velocity.y > 0) {
             if (this.isOnGround() || this.isOnAPlatform()) {
-                this.yVelocity = 0;
+                this.velocity.y = 0;
                 this.isInAir = false;
             }
         }
 
-        this.y += this.yVelocity;
+        this.y += this.velocity.y;
     }
 
     isOnGround() {
@@ -71,7 +72,7 @@ class Character {
     isOnAPlatform() {
         for (let i = 0; i < platforms.length; i++) {
             if (platforms[i].isCharacterOnTop(this)) {
-                this.y = platforms[i].y - this.height;
+                this.y = platforms[i].y - this.height + (platforms[i].speed || 0);
                 return true;
             }
         }

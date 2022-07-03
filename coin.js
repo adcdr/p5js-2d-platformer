@@ -1,15 +1,10 @@
 class Coin {
-    constructor(spriteSheet, x, distanceAboveGround) {
+    constructor(spriteSheet, x, y) {
         this.sprite = new Sprite(spriteSheet, 6);;
         this.x = x;
-        this.distanceAboveGround = distanceAboveGround;
-        this.y = groundYPosition - distanceAboveGround;
+        this.y = y;
         this.width = this.sprite.width;
         this.height = this.sprite.height;
-    }
-
-    updateYPosition() {        
-        this.y = groundYPosition - this.distanceAboveGround;
     }
 
     draw() {

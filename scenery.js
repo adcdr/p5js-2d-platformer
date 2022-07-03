@@ -4,13 +4,13 @@ class Scenery {
 
         noStroke();
 
-        fill(105, 55, 31);
+        fill(173, 100, 57);
         rect(0, y, width, height);
 
-        fill(72, 120, 23);
+        fill(26,98,48);
         rect(0, y, width, height / 25)
 
-        fill(33, 74, 42);
+        fill(82,165,61);
         rect(0, y, width, 4);
 
         pop();

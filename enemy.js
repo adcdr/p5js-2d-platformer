@@ -1,16 +1,15 @@
 class Enemy extends Character {
-    constructor(spriteSheet, xMin, xMax, distanceAboveGround, speed) {
+    constructor(spriteSheet, xMin, xMax, y, speed) {
         super(spriteSheet, 2);
                 
         this.xMin = xMin;
         this.xMax = xMax;
         this.speed = speed;
-        this.xVelocity = speed;
+        this.velocity.x = speed;
 
         this.x = (xMin + xMax) / 2;
-        this.distanceAboveGround = distanceAboveGround;
-        this.initialY = groundYPosition - distanceAboveGround - this.height;
-        this.y = this.initialY;
+        this.y = y;
+        this.initialY = y;
         this.movingLeft = false;
     }
 
@@ -26,13 +25,13 @@ class Enemy extends Character {
     doPatrol() {
         if (this.movingLeft) {
             if (this.x > this.xMin) {
-                this.xVelocity = -this.speed;
+                this.velocity.x = -this.speed;
             } else {
                 this.movingLeft = false;
             }
         } else {
             if (this.x + this.width < this.xMax) {
-                this.xVelocity = this.speed;
+                this.velocity.x = this.speed;
             } else {
                 this.movingLeft = true;
             }
