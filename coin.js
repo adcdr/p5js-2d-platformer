@@ -1,6 +1,6 @@
 class Coin {
-    constructor(spriteSheet, x, y) {
-        this.sprite = new Sprite(spriteSheet, 6);;
+    constructor(x, y) {
+        this.sprite = new Sprite(coinSpriteSheet, 6);;
         this.x = x;
         this.y = y;
         this.width = this.sprite.width;

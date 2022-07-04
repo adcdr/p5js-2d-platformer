@@ -6,21 +6,28 @@ var originalCoins = [];
 var canyons = [];
 var enemies = [];
 var fireworks = [];
+var trees = [];
 var worldXPosition = 0;
-var worldHeight = 1000;
+var worldHeight = 800;
 var groundYPosition = worldHeight * 0.8;
 var scenery;
 var score = 0;
-var scoreToWin = 10;
+var scoreToWin = 1;
 var livesRemaining = 3;
 var gameLost = false;
 var gameWon = false;
+
+var HORIZONTAL = 0;
+var VERTICAL = 1;
+var SPACE_BAR = 32;
 
 function preload()
 {
     playerSpriteSheet = loadImage('assets/sprites/purple_monster.png');
     enemySpriteSheet = loadImage('assets/sprites/green_slime.png');
     coinSpriteSheet = loadImage('assets/sprites/coin/coin-sprite.png');
+    treesSpriteSheet = loadImage('assets/sprites/trees.png')
+    mountainsImage = loadImage('assets/mountains.png');
 }
 
 function setup()
@@ -45,15 +52,18 @@ function draw()
 
     checkKeyDown();
 
-    scenery.drawGround(groundYPosition);
+    scenery.drawGround();
+    scenery.drawBackground();
 
     push();
    
-        updateWorldXPosition();    
+        updateWorldXPosition();
 
         canyons.forEach(canyon => {
             canyon.draw();
-        });
+        });               
+        
+        scenery.drawTrees();
 
         platforms.forEach(platform => {
             platform.update();
@@ -167,18 +177,6 @@ function windowResized()
     resizeCanvas(windowWidth, worldHeight);
 
     hearts.x = width - 90;
-
-    platforms.forEach(platform => {
-        platform.updateYPosition();
-    });
-
-    enemies.forEach(enemy => {
-        enemy.updateYPosition();
-    });
-
-    coins.forEach(coin => {
-        coin.updateYPosition();
-    });
 }
 
 function copyCoins(coinsA, coinsB) 
@@ -191,6 +189,9 @@ function copyCoins(coinsA, coinsB)
 function doGameWon()
 {
     push();
+
+    fill(0, 0, 0, 130);
+    rect(0, 0, width, height);
 
     if (random(1) < 0.03) {
         fireworks.push(new Firework());

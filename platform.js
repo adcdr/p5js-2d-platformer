@@ -9,6 +9,7 @@ class Platform
 
     update() {}
 
+
     draw() {
         push();
 

@@ -7,7 +7,8 @@ class Canyon {
     draw() {
         push();
 
-            fill(0);
+            noStroke();
+            fill(43, 47, 20);
             rect(this.x, groundYPosition, this.width, windowHeight);
 
         pop();

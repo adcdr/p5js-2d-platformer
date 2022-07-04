@@ -12,8 +12,7 @@ function checkKeyDown()
             player.velocity.x = 3;
         }
 
-         // 32 is space bar
-        if ((keyIsDown(UP_ARROW) || (keyIsDown(32))) && player.isInAir === false)
+        if ((keyIsDown(UP_ARROW) || (keyIsDown(SPACE_BAR))) && player.isInAir === false)
         {
             player.velocity.y = -6;
             player.isInAir = true;

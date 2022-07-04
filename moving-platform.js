@@ -1,13 +1,13 @@
 class MovingPlatform extends Platform {
     constructor(x, y, width, height, range, speed, direction) {
         super(x, y, width, height);
+        
+        this.direction = direction;
 
-        if (direction === 'HORIZONTAL') {
-            this.direction = 0;
+        if (direction === HORIZONTAL) {
             this.rangeMin = x;
             this.rangeMax = x + range;
         } else {
-            this.direction = 1;
             this.rangeMin = this.y - range;
             this.rangeMax = this.y;
         }
@@ -17,7 +17,7 @@ class MovingPlatform extends Platform {
     }
 
     update() {
-        if (this.direction === 0) { // horizontal
+        if (this.direction === HORIZONTAL) {
             if (this.movingPositiveDirection) {
                 if (this.x > this.rangeMin) {
                     this.x -= this.speed;
