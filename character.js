@@ -5,7 +5,6 @@ class Character {
         this.width = this.sprite.width;
         this.x = width / 2;
         this.y = groundYPosition - this.height;
-        this.isInAir = false;
         this.velocity = createVector(0, 0);
         this.velocity.x = 0;
         this.velocity.y = 0;
@@ -14,7 +13,8 @@ class Character {
         this.flashCount = 0;
         this.applyTint = false;
         this.isPlummeting = false;
-    }    
+        this.isInAir = false;
+    }
 
     update() {
         this.applyGravity();
@@ -22,12 +22,12 @@ class Character {
         const animate = this.velocity.x !== 0;
         this.x += this.velocity.x;
 
-        if (this.velocity.x < 0) 
+        if (this.velocity.x < 0)
             this.sprite.facingDirection = 'left';
-        else if (this.velocity.x !== 0) 
+        else if (this.velocity.x !== 0)
             this.sprite.facingDirection = 'right'
 
-        push()
+        push();
             if (this.flashCount > 0) {
                 if (frameCount % 10 === 0) {
                     this.applyTint = !this.applyTint;
@@ -56,6 +56,8 @@ class Character {
             if (this.isOnGround() || this.isOnAPlatform()) {
                 this.velocity.y = 0;
                 this.isInAir = false;
+            } else {
+                this.isInAir = true;
             }
         }
 

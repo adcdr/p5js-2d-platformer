@@ -8,7 +8,7 @@ class Scenery {
 
         noStroke();
 
-        fill(173, 100, 57);
+        fill(115, 74, 50);
         rect(0, groundYPosition, width, height);
 
         fill(26, 98, 48);
@@ -34,7 +34,7 @@ class Scenery {
         while (lastTreeX < width * 10) {
             lastTreeX = random(lastTreeX + 100, lastTreeX + width);
             let overACanyon = false;
-            
+
             for (let i = 0; i < canyons.length; i++) {
                 if (lastTreeX + treeImages[0].width >= canyons[i].x && lastTreeX <= canyons[i].x + canyons[i].width) {
                     overACanyon = true;

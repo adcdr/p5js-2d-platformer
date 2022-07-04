@@ -1,20 +1,16 @@
 class Enemy extends Character {
     constructor(xMin, xMax, y, speed) {
         super(enemySpriteSheet, 2);
-                
+
         this.xMin = xMin;
         this.xMax = xMax;
         this.speed = speed;
         this.velocity.x = speed;
 
-        this.x = (xMin + xMax) / 2;
+        this.x = random(xMin, xMax);
         this.y = y;
         this.initialY = y;
         this.movingLeft = false;
-    }
-
-    updateYPosition() {
-        this.y = groundYPosition - this.distanceAboveGround;
     }
 
     update() {
@@ -39,7 +35,7 @@ class Enemy extends Character {
     }
 
     isInContactWithPlayer() {
-        return Math.hypot((this.x + this.width/2) - (player.x + player.width/2), (this.y + this.height/2) - (player.y + player.height/2)) 
+        return Math.hypot((this.x + this.width/2) - (player.x + player.width/2), (this.y + this.height/2) - (player.y + player.height/2))
                 <= this.width/2 + player.width/2;
     }
 

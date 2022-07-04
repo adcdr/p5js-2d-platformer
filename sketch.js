@@ -1,25 +1,26 @@
-var player;
-var hearts;
-var platforms = [];
-var coins = [];
-var originalCoins = [];
-var canyons = [];
-var enemies = [];
-var fireworks = [];
-var trees = [];
-var worldXPosition = 0;
-var worldHeight = 800;
-var groundYPosition = worldHeight * 0.8;
-var scenery;
-var score = 0;
-var scoreToWin = 1;
-var livesRemaining = 3;
-var gameLost = false;
-var gameWon = false;
+const HORIZONTAL = 0;
+const VERTICAL = 1;
+const SPACE_BAR = 32;
 
-var HORIZONTAL = 0;
-var VERTICAL = 1;
-var SPACE_BAR = 32;
+let player;
+let hearts;
+const platforms = [];
+const coins = [];
+const originalCoins = [];
+const canyons = [];
+const enemies = [];
+const fireworks = [];
+const trees = [];
+let worldXPosition = 0;
+let worldHeight = 700;
+const groundYPosition = worldHeight * 0.8;
+let scenery;
+let score = 0;
+const scoreToWin = 12;
+let livesRemaining = 3;
+let gameLost = false;
+let gameWon = false;
+let playerSpriteSheet, enemySpriteSheet, coinSpriteSheet, treesSpriteSheet, mountainsImage;
 
 function preload()
 {
@@ -56,24 +57,24 @@ function draw()
     scenery.drawBackground();
 
     push();
-   
+
         updateWorldXPosition();
 
         canyons.forEach(canyon => {
             canyon.draw();
-        });               
-        
+        });
+
         scenery.drawTrees();
 
         platforms.forEach(platform => {
             platform.update();
             platform.draw();
         });
-        
+
         coins.forEach((coin, index) => {
             coin.draw();
 
-            if (coin.isInContactWithPlayer()) 
+            if (coin.isInContactWithPlayer())
             {
                 collectCoin(index);
             }
@@ -83,11 +84,11 @@ function draw()
             enemy.update();
         });
 
-        player.update(); 
-    
+        player.update();
+
     pop();
-    
-    hearts.draw();   
+
+    hearts.draw();
 
     checkDeath();
 
@@ -100,7 +101,7 @@ function draw()
     }
 }
 
-function collectCoin(coinIndex) 
+function collectCoin(coinIndex)
 {
     coins.splice(coinIndex, 1);
     score = score + 1;
@@ -111,7 +112,7 @@ function collectCoin(coinIndex)
     }
 }
 
-function checkDeath() 
+function checkDeath()
 {
     if (!this.gameLost && player.hasDied())
     {
@@ -126,10 +127,10 @@ function checkDeath()
         {
             resetLevel();
         }
-    }    
+    }
 }
 
-function resetLevel() 
+function resetLevel()
 {
     player.reset();
 
@@ -155,7 +156,7 @@ function restartGame()
         enemy.reset();
     });
 
-    copyCoins(originalCoins, coins) 
+    copyCoins(originalCoins, coins)
 
     loop();
 }
@@ -163,23 +164,23 @@ function restartGame()
 function updateWorldXPosition()
 {
     var playerDistanceFromMiddle = Math.abs((player.x + worldXPosition) - (width / 2));
-    
+
     if (playerDistanceFromMiddle !== 0 && (keyIsDown(RIGHT_ARROW) || keyIsDown(LEFT_ARROW)))
-    {        
+    {
         worldXPosition = worldXPosition - player.velocity.x;
     }
 
-    translate(worldXPosition, 0);    
+    translate(worldXPosition, 0);
 }
 
-function windowResized() 
+function windowResized()
 {
     resizeCanvas(windowWidth, worldHeight);
 
     hearts.x = width - 90;
 }
 
-function copyCoins(coinsA, coinsB) 
+function copyCoins(coinsA, coinsB)
 {
     coinsA.forEach(coin => {
         coinsB.push(coin);
@@ -190,25 +191,30 @@ function doGameWon()
 {
     push();
 
-    fill(0, 0, 0, 130);
-    rect(0, 0, width, height);
-
-    if (random(1) < 0.03) {
-        fireworks.push(new Firework());
-    }
-      
-    for (let i = fireworks.length - 1; i >= 0; i--) {
-        fireworks[i].update();
-        fireworks[i].show();
-        
-        if (fireworks[i].done()) {
-          fireworks.splice(i, 1);
-        }
-    }
-
-    displayMessage('Congratulations', 'YOU WIN!');
+        noStroke();
+        fill(0, 0, 0, 130);
+        rect(0, 0, width, height);
 
     pop();
+
+    push();
+
+        if (random(1) < 0.03) {
+            fireworks.push(new Firework());
+        }
+
+        for (let i = fireworks.length - 1; i >= 0; i--) {
+            fireworks[i].update();
+            fireworks[i].show();
+
+            if (fireworks[i].done()) {
+              fireworks.splice(i, 1);
+            }
+        }
+
+    pop();
+
+    displayMessage('Congratulations', 'YOU WIN!');
 }
 
 function doGameOver()
@@ -229,12 +235,12 @@ function displayMessage(line1, line2)
 
     fill(173, 177, 222);
     rect((width - 400) / 2 - 10, (height - 300) / 2 - 10, 420, 150);
-    
+
     fill(34, 47, 191);
     rect((width - 400) / 2, (height - 300) / 2, 400, 130);
 
     fill(255);
-    
+
     text(line1, (width - 400)/2 + 200, (height - 300)/2 + 50);
     text(line2, (width - 400)/2 + 200, (height - 300)/2 + 100);
 
