@@ -14,8 +14,10 @@ class Enemy extends Character {
     }
 
     update() {
-        super.update();
-        this.doPatrol();
+        if (this.isOnScreen()) {
+            super.update();
+            this.doPatrol();
+        }
     }
 
     doPatrol() {
@@ -43,5 +45,9 @@ class Enemy extends Character {
         this.x = (this.xMin + this.xMax) / 2
         this.y = this.initialY;
         this.movingLeft = false;
+    }
+
+    isOnScreen() {
+        return this.x - worldXPosition > 0 && this.x + worldXPosition < width;
     }
 }

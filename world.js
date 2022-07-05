@@ -4,7 +4,7 @@ function createWorldItems() {
     coins.push(new Coin(2325, 500));
     coins.push(new Coin(3000, 50));
     coins.push(new Coin(3700, 450));
-    coins.push(new Coin(4800, 530));
+    coins.push(new Coin(4850, 530));
     coins.push(new Coin(6000, 200));
     coins.push(new Coin(7000, 500));
     coins.push(new Coin(7950, 150));
@@ -23,7 +23,7 @@ function createWorldItems() {
     canyons.push(new Canyon(-500, 1000));
     canyons.push(new Canyon(2100, 500));
     canyons.push(new Canyon(3500, 500));
-    canyons.push(new Canyon(4750, 50));
+    canyons.push(new Canyon(4800, 50));
     canyons.push(new Canyon(7700, 600));
 
     for (let i = 0; i < 3; i++)
@@ -34,13 +34,13 @@ function createWorldItems() {
         platforms.push(new Platform(5300 + xOffset, 450 - yOffset, 200, 20));
     }
 
-    enemies.push(new Enemy(4700, 4900, 200, 20));
+    enemies.push(new Enemy(4820, 4900, 550, 2));
     enemies.push(new Enemy(7850, 8050, 150, 10));
 
     for (let i = 0; i < 3; i++)
     {
         let offset = i * 300;
 
-        enemies.push(new Enemy(6500 + offset, 6800 + offset + 100, 400, 2));
+        enemies.push(new Enemy(6500 + offset, 6800 + offset + 100, 550, 2));
     }
 }

@@ -154,6 +154,7 @@ function restartGame()
     hearts.count = livesRemaining;
     gameLost = false;
     worldXPosition = 0;
+    clock.startTimestamp = Math.floor(Date.now() / 1000);
 
     player.reset();
 
