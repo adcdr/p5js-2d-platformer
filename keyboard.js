@@ -7,16 +7,18 @@ function checkKeyDown()
             player.velocity.x = -3.2;
         }
 
+
+        //=================
         // Task 1
-        if (keyIsDown(RIGHT_ARROW))
-        {
-            player.velocity.x = 3.2;
-        }
+        //=================
+
 
         if ((keyIsDown(UP_ARROW) || (keyIsDown(SPACE_BAR))) && !player.isInAir)
         {
+            //=================
             // Task 2
-            player.velocity.y = -6;
+            //=================
+            player.velocity.y = -4;
             player.isInAir = true;
         }
     }

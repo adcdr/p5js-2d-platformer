@@ -11,36 +11,53 @@ function createWorldItems() {
     coins.push(new Coin(8400, 500));
 
     platforms.push(new Platform(1500, 450, 200, 20));
-
-    // Task 3    
-    platforms.push(new Platform(2050, 530, 600, 30));
-
     platforms.push(new Platform(7850, 200, 200, 20));
 
-    platforms.push(new MovingPlatform(2980, 500, 50, 20, 400, 2, VERTICAL));
-    platforms.push(new MovingPlatform(3400, 500, 100, 15, 600, 2, HORIZONTAL));
+
+    //=================
+    // Task 3
+    //=================
+
+
+    //=================
+    // Task 4
+    //=================
+
+
+    //=================
+    // Task 5
+    //=================
+
 
     canyons.push(new Canyon(-500, 1000));
     canyons.push(new Canyon(2100, 500));
     canyons.push(new Canyon(3500, 500));
-    canyons.push(new Canyon(4800, 50));
     canyons.push(new Canyon(7700, 600));
 
+
+    //=================
+    // Task 6
+    //=================
+
+
+    //=================
+    // Task 7
+    //=================
     for (let i = 0; i < 3; i++)
     {
         let xOffset = i * 300;
-        let yOffset = i * 100;
 
-        platforms.push(new Platform(5300 + xOffset, 450 - yOffset, 200, 20));
+        platforms.push(new Platform(5300 + xOffset, 450, 200, 20));
     }
 
     enemies.push(new Enemy(4820, 4900, 550, 2));
     enemies.push(new Enemy(7850, 8050, 150, 10));
 
+    //=================
+    // Task 8
+    //=================
     for (let i = 0; i < 3; i++)
     {
-        let offset = i * 300;
-
-        enemies.push(new Enemy(6500 + offset, 6800 + offset + 100, 550, 2));
+        enemies.push(new Enemy(6950, 7050, 550, 2));
     }
 }
