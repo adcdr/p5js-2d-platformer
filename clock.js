@@ -4,7 +4,7 @@ class Clock {
     }
 
     draw() {
-        if (!gameLost || gameWon) {
+        if (!gameLost && !gameWon) {
             let currentTimestamp = Math.floor(Date.now() / 1000);
             let elapsedSeconds = currentTimestamp - this.startTimestamp;
 

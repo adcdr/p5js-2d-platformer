@@ -19,7 +19,9 @@ function checkKeyDown()
             // Task 2
             //=================
             player.velocity.y = -4;
+
             player.isInAir = true;
+            jumpSound.play();
         }
     }
 }

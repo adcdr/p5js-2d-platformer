@@ -9,6 +9,8 @@ class Firework {
     this.exploded = false;
     this.particles = [];
     this.gravity = createVector(0, 0.2);
+
+    fireworkSound.play();
   }
 
   done() {

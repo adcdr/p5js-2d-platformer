@@ -17,11 +17,12 @@ const groundYPosition = worldHeight * 0.8;
 let scenery;
 let clock;
 let score = 0;
-const scoreToWin = 12;
+const scoreToWin = 10;
 let livesRemaining = 3;
 let gameLost = false;
 let gameWon = false;
 let playerSpriteSheet, enemySpriteSheet, coinSpriteSheet, treesSpriteSheet, mountainsImage, canyonImage;
+let jumpSound, collectSound, deathSound, winSound, fireworkSound;
 
 function preload()
 {
@@ -31,6 +32,14 @@ function preload()
     treesSpriteSheet = loadImage('assets/sprites/trees.png');
     mountainsImage = loadImage('assets/mountains.png');
     canyonImage = loadImage('assets/canyon.png');
+
+    soundFormats('wav');
+
+    jumpSound = loadSound('assets/sounds/jump');
+    winSound = loadSound('assets/sounds/win');
+    deathSound = loadSound('assets/sounds/death');
+    collectSound = loadSound('assets/sounds/collect');
+    fireworkSound = loadSound('assets/sounds/firework');
 }
 
 function setup()
@@ -110,6 +119,7 @@ function collectCoin(coinIndex)
 {
     coins.splice(coinIndex, 1);
     score = score + 1;
+    collectSound.play();
 
     if (score === scoreToWin)
     {
@@ -123,6 +133,7 @@ function checkDeath()
     {
         livesRemaining = livesRemaining - 1;
         hearts.count = livesRemaining;
+        deathSound.play();
 
         if (livesRemaining === 0)
         {

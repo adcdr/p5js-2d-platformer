@@ -29,7 +29,7 @@ function createWorldItems() {
     //=================
 
 
-    canyons.push(new Canyon(-500, 1000));
+    canyons.push(new Canyon(-1500, 2000));
     canyons.push(new Canyon(2100, 500));
     canyons.push(new Canyon(3500, 500));
     canyons.push(new Canyon(7700, 600));
