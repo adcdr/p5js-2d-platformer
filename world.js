@@ -1,48 +1,46 @@
 function createWorldItems() {
     coins.push(new Coin(1100, 500));
-    coins.push(new Coin(1600, 350));
-    coins.push(new Coin(1900, 250));
-    coins.push(new Coin(2500, 250));
-    coins.push(new Coin(2820, 50));
-    coins.push(new Coin(3500, 500));
-    coins.push(new Coin(4000, 500));
-    coins.push(new Coin(5400, 230));
-    coins.push(new Coin(5950, 500));
+    coins.push(new Coin(1600, 320));
+    coins.push(new Coin(2325, 500));
+    coins.push(new Coin(3000, 50));
+    coins.push(new Coin(3700, 450));
+    coins.push(new Coin(4800, 530));
+    coins.push(new Coin(6000, 200));
+    coins.push(new Coin(7000, 500));
+    coins.push(new Coin(7950, 150));
+    coins.push(new Coin(8400, 500));
 
     platforms.push(new Platform(1500, 450, 200, 20));
 
-    // Task 3
-    platforms.push(new Platform(1800, 350, 200, 30));
+    // Task 3    
+    platforms.push(new Platform(2050, 530, 600, 30));
 
-    platforms.push(new MovingPlatform(2000, 300, 100, 20, 500, 2, HORIZONTAL));
+    platforms.push(new Platform(7850, 200, 200, 20));
 
-    platforms.push(new MovingPlatform(2800, 500, 50, 20, 450, 2, VERTICAL));
+    platforms.push(new MovingPlatform(2980, 500, 50, 20, 400, 2, VERTICAL));
+    platforms.push(new MovingPlatform(3400, 500, 100, 15, 600, 2, HORIZONTAL));
 
-    canyons.push(new Canyon(3000, 200));
-
-    enemies.push(new Enemy(3900, 4100, 400, 2));
+    canyons.push(new Canyon(-500, 1000));
+    canyons.push(new Canyon(2100, 500));
+    canyons.push(new Canyon(3500, 500));
+    canyons.push(new Canyon(4750, 50));
+    canyons.push(new Canyon(7700, 600));
 
     for (let i = 0; i < 3; i++)
     {
         let xOffset = i * 300;
         let yOffset = i * 100;
 
-        platforms.push(new Platform(4700 + xOffset, 450 - yOffset, 200, 20));
+        platforms.push(new Platform(5300 + xOffset, 450 - yOffset, 200, 20));
     }
 
-    enemies.push(new Enemy(5300, 5500, 200, 2));
+    enemies.push(new Enemy(4700, 4900, 200, 20));
+    enemies.push(new Enemy(7850, 8050, 150, 10));
 
     for (let i = 0; i < 3; i++)
     {
         let offset = i * 300;
 
-        enemies.push(new Enemy(5800 + offset, 5800 + offset + 100, 400, 2));
-    }
-
-    for (let i = 0; i < 3; i++)
-    {
-        let offset = i * 100;
-
-        coins.push(new Coin(7000 + offset, 500));
+        enemies.push(new Enemy(6500 + offset, 6800 + offset + 100, 400, 2));
     }
 }

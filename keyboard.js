@@ -4,13 +4,13 @@ function checkKeyDown()
     {
         if (keyIsDown(LEFT_ARROW))
         {
-            player.velocity.x = -3;
+            player.velocity.x = -3.2;
         }
 
         // Task 1
         if (keyIsDown(RIGHT_ARROW))
         {
-            player.velocity.x = 3;
+            player.velocity.x = 3.2;
         }
 
         if ((keyIsDown(UP_ARROW) || (keyIsDown(SPACE_BAR))) && !player.isInAir)

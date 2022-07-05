@@ -22,7 +22,10 @@ class MovingPlatform extends Platform {
                 if (this.x > this.rangeMin) {
                     this.x -= this.speed;
 
-                    if (this.isCharacterOnTop(player)) player.x -= this.speed;
+                    if (this.isCharacterOnTop(player)) {
+                        player.x -= this.speed;
+                        worldXPosition += this.speed;
+                    }
                 } else {
                     this.movingPositiveDirection = false;
                 }
@@ -30,7 +33,10 @@ class MovingPlatform extends Platform {
                 if (this.x < this.rangeMax) {
                     this.x += this.speed;
 
-                    if (this.isCharacterOnTop(player)) player.x += this.speed;
+                    if (this.isCharacterOnTop(player)) {
+                        player.x += this.speed;
+                        worldXPosition -= this.speed;
+                    }
                 } else {
                     this.movingPositiveDirection = true;
                 }

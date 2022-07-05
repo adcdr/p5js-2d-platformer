@@ -11,6 +11,9 @@ class Canyon {
             fill(43, 47, 20);
             rect(this.x, groundYPosition, this.width, windowHeight);
 
+            // canyonImage.resize(this.width, height - groundYPosition);
+            // image(canyonImage, this.x, groundYPosition);
+
         pop();
     }
 

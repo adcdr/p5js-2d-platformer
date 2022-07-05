@@ -12,37 +12,41 @@ const enemies = [];
 const fireworks = [];
 const trees = [];
 let worldXPosition = 0;
-let worldHeight = 700;
+const worldHeight = 700;
 const groundYPosition = worldHeight * 0.8;
 let scenery;
+let clock;
 let score = 0;
 const scoreToWin = 12;
 let livesRemaining = 3;
 let gameLost = false;
 let gameWon = false;
-let playerSpriteSheet, enemySpriteSheet, coinSpriteSheet, treesSpriteSheet, mountainsImage;
+let playerSpriteSheet, enemySpriteSheet, coinSpriteSheet, treesSpriteSheet, mountainsImage, canyonImage;
 
 function preload()
 {
     playerSpriteSheet = loadImage('assets/sprites/purple_monster.png');
     enemySpriteSheet = loadImage('assets/sprites/green_slime.png');
     coinSpriteSheet = loadImage('assets/sprites/coin/coin-sprite.png');
-    treesSpriteSheet = loadImage('assets/sprites/trees.png')
+    treesSpriteSheet = loadImage('assets/sprites/trees.png');
     mountainsImage = loadImage('assets/mountains.png');
+    canyonImage = loadImage('assets/canyon.png');
 }
 
 function setup()
 {
     createCanvas(windowWidth, worldHeight);
+
     textSize(18);
-
-    player = new Player(playerSpriteSheet);
-
-    hearts = new Hearts(livesRemaining);
+    textStyle(BOLD);
+    textAlign(CENTER);
 
     createWorldItems();
 
+    player = new Player(playerSpriteSheet);
+    hearts = new Hearts(livesRemaining);
     scenery = new Scenery();
+    clock = new Clock();
 
     copyCoins(coins, originalCoins);
 }
@@ -89,6 +93,7 @@ function draw()
     pop();
 
     hearts.draw();
+    clock.draw();
 
     checkDeath();
 
@@ -192,23 +197,20 @@ function doGameWon()
     push();
 
         noStroke();
-        fill(0, 0, 0, 130);
+
+        fill(0, 0, 0, 180);
         rect(0, 0, width, height);
-
-    pop();
-
-    push();
-
-        if (random(1) < 0.03) {
+        
+        if (random(1) < 0.04) {
             fireworks.push(new Firework());
         }
-
+        
         for (let i = fireworks.length - 1; i >= 0; i--) {
             fireworks[i].update();
             fireworks[i].show();
-
+            
             if (fireworks[i].done()) {
-              fireworks.splice(i, 1);
+                fireworks.splice(i, 1);
             }
         }
 
@@ -229,20 +231,20 @@ function displayMessage(line1, line2)
 {
     push();
 
-    textSize(32);
-    textStyle(BOLD);
-    textAlign(CENTER);
+        textSize(32);
+        textStyle(BOLD);
+        textAlign(CENTER);
 
-    fill(173, 177, 222);
-    rect((width - 400) / 2 - 10, (height - 300) / 2 - 10, 420, 150);
+        fill(173, 177, 222);
+        rect((width - 400) / 2 - 10, (height - 300) / 2 - 10, 420, 150);
 
-    fill(34, 47, 191);
-    rect((width - 400) / 2, (height - 300) / 2, 400, 130);
+        fill(34, 47, 191);
+        rect((width - 400) / 2, (height - 300) / 2, 400, 130);
 
-    fill(255);
+        fill(255);
 
-    text(line1, (width - 400)/2 + 200, (height - 300)/2 + 50);
-    text(line2, (width - 400)/2 + 200, (height - 300)/2 + 100);
+        text(line1, (width - 400)/2 + 200, (height - 300)/2 + 50);
+        text(line2, (width - 400)/2 + 200, (height - 300)/2 + 100);
 
     pop();
 }

@@ -9,7 +9,6 @@ class Platform
 
     update() {}
 
-
     draw() {
         push();
 
@@ -50,6 +49,6 @@ class Platform
         return (character.x + character.width - 15) >= this.x
                 && character.x + 15 <= (this.x + this.width)
                 && (character.y + character.height) >= this.y
-                && (character.y + character.height) - this.y <= character.terminalYVelocity;
+                && (character.y + character.height) - this.y <= character.terminalYVelocity + (this.speed || 0);
     }
 }
